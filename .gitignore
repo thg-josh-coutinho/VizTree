@@ -3,6 +3,9 @@
 *#
 #.*
 
+netty-socketio
+lib
+
 target/
 *.o
 node_modules/
