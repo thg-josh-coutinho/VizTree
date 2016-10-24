@@ -1,26 +1,27 @@
 package com.hutgroup.viztree;
 
-import java.util.stream;
-//import com.hutgroup.viztree.graph.FlowGraphListener;
-//import com.hutgroup.viztree.graph.FlowGraphEdge;
+import java.util.stream.*;
+import com.hutgroup.viztree.graph.FlowGraphListener;
+import org.jgrapht.graph.FlowGraphEdge;
+import org.jgrapht.graph.FlowGraph;
 
 public class App 
 {
     public static void main( String[] args )
     {
-	/*
+
 	Supplier<FlowGraphUpdate> updates = App::nextUpdate;
 	FlowGraphListener gl = new FlowGraphListener(args);
-	FlowGraph g = initFlowGraph(gl);
+	FlowGraph graph = initFlowGraph(gl);
 
 	updates
 	    .stream()
 	    .foreach((update) -> graph.update(update));
     }
 
-    private static FlowGraph initFlowGraph(String []args, FlowGraphListener listener)
+    private static FlowGraph initFlowGraph(FlowGraphListener listener)
     {
-	FlowGraph g = new FlowGraph(FlowGraphEdge.class);
+	/*FlowGraph g = new FlowGraph(FlowGraphEdge.class);
 	FlowGraphNode v1 = FlowGraphNode("eq");
 	FlowGraphNode v2 = FlowGraphNode("ex");
 	FlowGraphNode v3 = FlowGraphNode("a");
@@ -48,8 +49,9 @@ public class App
 	e10.setEdgeWeight(6);
 	FlowGraphEdge e11 = g.addEdge(v3, v5);
 	e11.setEdgeWeight(3);
-	
-	return g;
+
+	return g; */
+	return null;
 	
     }
 
@@ -68,7 +70,7 @@ public class App
     }
     private static String[] getUpdateStreamArgs(String []args)
     {
-    throw new UnsupportedOperationException("Unimplemented");*/
+    throw new UnsupportedOperationException("Unimplemented");
     }
 
 }
