@@ -223,9 +223,6 @@ function update () {
       .style("stroke", INFLOW_COLOR)
       .style("opacity", OPACITY.LINK_DEFAULT);
 
-/*      link.transition()
-          .duration(1000)
-          .style("stroke-WIDTH", function(d) { if(d.id == "r-a") { return 20; } else { return d.thickness; } }).attr("d", path).style("opacity", OPACITY.LINK_DEFAULT);*/
   }
 
   function fadeUnconnected(g) {
@@ -616,3 +613,11 @@ update();
 
 
 var linkL = svg.select("#links").selectAll("path.link")
+
+var socket =  io.connect('http://localhost:9092');
+socket.on('chatevent', function(data) {
+      linkL.transition()
+          .duration(1000)
+          .style("stroke-WIDTH", function(d) { if(d.id == data.edge) { return data.weight; } else { return d.thickness; } }).attr("d", path).style("opacity", OPACITY.LINK_DEFAULT);
+
+});

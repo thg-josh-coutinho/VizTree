@@ -3,15 +3,17 @@ package com.hutgroup.viztree;
 public class ChatObject {
 
     private String userName;
-    private String message;
+    private String edge;
+    private double weight;
 
     public ChatObject() {
     }
 
-    public ChatObject(String userName, String message) {
+    public ChatObject(String userName, String edge, double weight) {
         super();
         this.userName = userName;
-        this.message = message;
+	this.edge = edge;
+	this.weight = weight;
     }
 
     public String getUserName() {
@@ -19,13 +21,6 @@ public class ChatObject {
     }
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-    public void setMessage(String message) {
-        this.message = message;
     }
 
 }

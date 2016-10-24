@@ -41,11 +41,8 @@ public class FlowGraphListener implements IFlowGraphListener<FlowGraphNode, Flow
     {
 	server.getBroadcastOperations().sendEvent("chatevent",
 						  new ChatObject("server",
-								 String.format("%s,%s,%d",
-									       e.getEdgeSource(),
-									       e.getEdgeTarget(),
-									       e.getNewWeight()))
-						  );
+								 e.getEdgeSource() + "-" + e.getEdgeTarget(),
+								 e.getNewWeight()));
     }
 
 }
