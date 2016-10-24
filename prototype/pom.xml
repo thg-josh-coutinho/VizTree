@@ -18,7 +18,7 @@
     <dependency>
       <groupId>org.jgrapht</groupId>
       <artifactId>jgrapht-core</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.0.1-SNAPSHOT-josh</version>
     </dependency>
 
     <dependency>
@@ -28,12 +28,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jgrapht</groupId>
-      <artifactId>jgrapht-touchgraph</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
-    </dependency>
-    
-    <dependency>
       <groupId>com.corundumstudio.socketio</groupId>
       <artifactId>netty-socketio</artifactId>
       <version>1.7.13-SNAPSHOT</version>
@@ -42,6 +36,15 @@
 
   <build>
     <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<version>3.3</version>
+	<artifactId>maven-compiler-plugin</artifactId>
+	<configuration>
+	  <source>1.8</source>
+	  <target>1.8</target>
+	</configuration>
+      </plugin>
     </plugins>
   </build>
 

@@ -1,0 +1,13 @@
+* So the things that need to be done are as follows:
+.. Get flow graph to compile
+. , 
+.. Implement the handler for edge updated events
+. , Create the class for grouping edge updated fields
+. , Implement the functionality to update the listeners in the graph class
+.. Handle edge weight updated events by sending, (source, target, new edge weight)
+. , Add socket io to the app
+.  . In one of the listeners add the transition functionality to the corresponding edge.
+.. Initialize the graph and route its events to the stream used for updates
+.. Implement a buffering agency on the server side that buffers graph event updates and sends them to the visualizer every 'x' milliseconds.
+.. Setup activemq
+.. Create your own activemqs that send events to you

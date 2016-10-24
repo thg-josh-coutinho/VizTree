@@ -1,12 +1,12 @@
-package com.hutgroup.viztree;
+package com.hutgroup.viztree.graph;
 
-import org.jgrapht.event.*;
+/*import org.jgrapht.event.*;
 import com.corundumstudio.socketio.listener.*;
-import com.corundumstudio.socketio.*;
+import com.corundumstudio.socketio.*;*/
 
 
-public class FlowGraphListener implements GraphListener<FlowGraphNode, FlowGraphEdge> {
-    
+public class FlowGraphListener { // implements GraphListener<FlowGraphNode, FlowGraphEdge> {
+    /*    
     public FlowGraphListener(){
 	Configuration config = new Configuration();
 	config.setHostname("localhost");
@@ -37,6 +37,6 @@ public class FlowGraphListener implements GraphListener<FlowGraphNode, FlowGraph
 	server.getBroadcastOperations().sendEvent("chatevent", e.toString());
     }
 
-
+    */
 
 }
