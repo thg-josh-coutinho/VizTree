@@ -6,7 +6,7 @@ import com.corundumstudio.socketio.listener.*;
 import com.corundumstudio.socketio.*;
 
 
-public class FlowGraphListener implements GraphListener<FlowGraphNode, FlowGraphEdge> {
+public class FlowGraphListener implements IFlowGraphListener<FlowGraphNode, FlowGraphEdge> {
 
     SocketIOServer server;
 
@@ -15,6 +15,7 @@ public class FlowGraphListener implements GraphListener<FlowGraphNode, FlowGraph
 	config.setHostname("localhost");
 	config.setPort(9092);
 
+	System.out.printf("Starting server on: %s:%d\n", "localhost", 9092);
 	server = new SocketIOServer(config);
 	server.start();
     }
@@ -35,7 +36,9 @@ public class FlowGraphListener implements GraphListener<FlowGraphNode, FlowGraph
 	server.getBroadcastOperations().sendEvent("chatevent", e.toString());
     }
 
-    public void edgeWeightChange(FlowGraphEdgeChangeEvent e) {
+    @Override
+    public void edgeWeightChange(FlowGraphEdgeChangeEvent e)
+    {
 	server.getBroadcastOperations().sendEvent("chatevent", e.toString());
     }
 

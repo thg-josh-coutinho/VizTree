@@ -12,8 +12,7 @@ public class App
     public static void main( String[] args )
     {
 
-	FlowGraphListener gl = new FlowGraphListener();
-	FlowGraph graph = initFlowGraph(gl);
+	FlowGraph graph = initFlowGraph();
 	FlowGraphUpdate initialUpdate = null;
 
 	Stream.iterate(initialUpdate, prev -> nextUpdate()).forEach((graphUpdate) -> update(graph, graphUpdate));
@@ -25,14 +24,20 @@ public class App
     {
 	throw new RuntimeException("Unimplemented everything");
     }	
-    private static FlowGraph initFlowGraph(FlowGraphListener listener)
+    private static FlowGraph initFlowGraph()
     {
 	FlowGraph g = new FlowGraph();
+	g.addGraphListener(new FlowGraphListener());
 	FlowGraphNode v1 = new FlowGraphNode("eq");
 	FlowGraphNode v2 = new FlowGraphNode("ex");
 	FlowGraphNode v3 = new FlowGraphNode("a");
 	FlowGraphNode v4 = new FlowGraphNode("r");
 	FlowGraphNode v5 = new FlowGraphNode("l");
+	g.addVertex(v1);
+	g.addVertex(v2);
+	g.addVertex(v3);
+	g.addVertex(v4);
+	g.addVertex(v5);
 	FlowGraphEdge e1 = g.addEdge(v1, v3);
 	g.setEdgeWeight(e1, 2);
 	FlowGraphEdge e2 = g.addEdge(v4, v3);
