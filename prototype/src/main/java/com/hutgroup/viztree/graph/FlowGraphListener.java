@@ -4,7 +4,7 @@ import org.jgrapht.event.*;
 import org.jgrapht.graph.*;
 import com.corundumstudio.socketio.listener.*;
 import com.corundumstudio.socketio.*;
-
+import com.hutgroup.viztree.ChatObject;
 
 public class FlowGraphListener implements IFlowGraphListener<FlowGraphNode, FlowGraphEdge> {
 
@@ -39,7 +39,13 @@ public class FlowGraphListener implements IFlowGraphListener<FlowGraphNode, Flow
     @Override
     public void edgeWeightChange(FlowGraphEdgeChangeEvent e)
     {
-	server.getBroadcastOperations().sendEvent("chatevent", e.toString());
+	server.getBroadcastOperations().sendEvent("chatevent",
+						  new ChatObject("server",
+								 String.format("%s,%s,%d",
+									       e.getEdgeSource(),
+									       e.getEdgeTarget(),
+									       e.getNewWeight()))
+						  );
     }
 
 }
