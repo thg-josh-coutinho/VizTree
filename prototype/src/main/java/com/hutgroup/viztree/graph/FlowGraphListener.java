@@ -1,18 +1,21 @@
 package com.hutgroup.viztree.graph;
 
-/*import org.jgrapht.event.*;
+import org.jgrapht.event.*;
+import org.jgrapht.graph.*;
 import com.corundumstudio.socketio.listener.*;
-import com.corundumstudio.socketio.*;*/
+import com.corundumstudio.socketio.*;
 
 
-public class FlowGraphListener { // implements GraphListener<FlowGraphNode, FlowGraphEdge> {
-    /*    
+public class FlowGraphListener implements GraphListener<FlowGraphNode, FlowGraphEdge> {
+
+    SocketIOServer server;
+
     public FlowGraphListener(){
 	Configuration config = new Configuration();
 	config.setHostname("localhost");
 	config.setPort(9092);
 
-	final SocketIOServer server = new SocketIOServer(config);
+	server = new SocketIOServer(config);
 	server.start();
     }
 
@@ -23,20 +26,17 @@ public class FlowGraphListener { // implements GraphListener<FlowGraphNode, Flow
     public void vertexRemoved(GraphVertexChangeEvent<FlowGraphNode> e) {}
 
     @Override
-    public void edgeAdded(FlowGraphEdgeChangeEvent e) {
+    public void edgeAdded(GraphEdgeChangeEvent e) {
 	server.getBroadcastOperations().sendEvent("chatevent", e.toString());
     }
 
     @Override
-    public void edgeRemoved(FlowGraphEdgeChangeEvent e) {
+    public void edgeRemoved(GraphEdgeChangeEvent e) {
 	server.getBroadcastOperations().sendEvent("chatevent", e.toString());
     }
 
-    @Override
     public void edgeWeightChange(FlowGraphEdgeChangeEvent e) {
 	server.getBroadcastOperations().sendEvent("chatevent", e.toString());
     }
-
-    */
 
 }
