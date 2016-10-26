@@ -141,7 +141,7 @@ defs.append("marker")
 
 function update () {
   var link, linkEnter, node, nodeEnter, collapser, collapserEnter;
-
+    console.log("calling update!");
   function dragmove(node) {
     node.x = Math.max(0, Math.min(WIDTH - node.width, d3.event.x));
     node.y = Math.max(0, Math.min(HEIGHT - node.height, d3.event.y));
@@ -176,6 +176,7 @@ function update () {
   }
 
   function restoreLinksAndNodes() {
+      console.log("Restoring the links and the nodes!");
     link
       .style("stroke", LINK_COLOR)
       .style("marker-end", function () { return 'url(#arrowHead)'; })
@@ -609,15 +610,36 @@ disableUserInterractions(2 * TRANSITION_DURATION);
 
 update();
 
-
+// First, checks if it isn't implemented yet.
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
 
 
 var linkL = svg.select("#links").selectAll("path.link")
 
 var socket =  io.connect('http://localhost:9092');
 socket.on('chatevent', function(data) {
-      linkL.transition()
-          .duration(1000)
-          .style("stroke-WIDTH", function(d) { if(d.id == data.edge) { return data.weight; } else { return d.thickness; } }).attr("d", path).style("opacity", OPACITY.LINK_DEFAULT);
+    console.log("Recieved a chat event from the server:");
+    console.log(data);
+    linkL
+        .filter(function(d) { return d.id == data.edge; })
+	.transition()
+        .duration(300)
+	.style("stroke-WIDTH", function(d) {
+	    console.log("Previous: {0}, New: {1}".format(d.thickness, data.weight));
+	    return data.weight;
+	})
+	.attr("d", path)
+	.style("opacity", OPACITY.LINK_DEFAULT);
 
 });
+

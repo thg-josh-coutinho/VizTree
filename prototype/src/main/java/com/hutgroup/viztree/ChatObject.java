@@ -23,4 +23,18 @@ public class ChatObject {
         this.userName = userName;
     }
 
+    public String getEdge() {
+        return edge;
+    }
+    public void setEdge(String edge) {
+        this.edge = edge;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
 }

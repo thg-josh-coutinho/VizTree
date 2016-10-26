@@ -39,6 +39,7 @@ public class FlowGraphListener implements IFlowGraphListener<FlowGraphNode, Flow
     @Override
     public void edgeWeightChange(FlowGraphEdgeChangeEvent e)
     {
+	System.out.println("Broadcasting " + e);
 	server.getBroadcastOperations().sendEvent("chatevent",
 						  new ChatObject("server",
 								 e.getEdgeSource() + "-" + e.getEdgeTarget(),
