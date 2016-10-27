@@ -45,7 +45,7 @@ public class App
     {
 	g.setEdgeWeight(update.getEdge(), update.getNewWeight());
 	try {
-	    Thread.sleep((int)(Math.random()*2000));
+	    Thread.sleep((int)(200));
 	}
 	catch(Exception e) {
 	    System.err.println("Err occurred when pausing within update inside App.java");
@@ -165,27 +165,27 @@ public class App
 
 
 	FlowGraphNode edgeSource1 = v1;
-	FlowGraphNode edgeTarget1 = v3;
+	FlowGraphNode edgeTarget1 = v2;
 	double oldWeight1 = 1;
 	double newWeight1 = 10;
 
-	FlowGraphNode edgeSource2 = v4;
+	FlowGraphNode edgeSource2 = v2;
 	FlowGraphNode edgeTarget2 = v3;
 	double oldWeight2 = 1;
 	double newWeight2 = 12;
 
-	FlowGraphNode edgeSource3 = v4;
-	FlowGraphNode edgeTarget3 = v2;
+	FlowGraphNode edgeSource3 = v3;
+	FlowGraphNode edgeTarget3 = v14;
 	double oldWeight3 = 1;
 	double newWeight3 = 2;
 
-	FlowGraphNode edgeSource4 = v4;
-	FlowGraphNode edgeTarget4 = v5;
+	FlowGraphNode edgeSource4 = v14;
+	FlowGraphNode edgeTarget4 = v4;
 	double oldWeight4 = 1;
 	double newWeight4 = 12;
 
-	FlowGraphNode edgeSource5 = v2;
-	FlowGraphNode edgeTarget5 = v3;
+	FlowGraphNode edgeSource5 = v5;
+	FlowGraphNode edgeTarget5 = v6;
 	double oldWeight5 = 1;
 	double newWeight5 = 4;
 
