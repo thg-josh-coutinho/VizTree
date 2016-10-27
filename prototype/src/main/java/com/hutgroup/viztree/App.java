@@ -44,38 +44,98 @@ public class App
     {
 	graph = new FlowGraph();
 	graph.addGraphListener(new FlowGraphListener());
-	FlowGraphNode v1 = new FlowGraphNode("eq");
-	FlowGraphNode v2 = new FlowGraphNode("ex");
-	FlowGraphNode v3 = new FlowGraphNode("a");
-	FlowGraphNode v4 = new FlowGraphNode("r");
-	FlowGraphNode v5 = new FlowGraphNode("l");
-	graph.addVertex(v1);
-	graph.addVertex(v2);
-	graph.addVertex(v3);
-	graph.addVertex(v4);
-	graph.addVertex(v5);
-	FlowGraphEdge e1 = graph.addEdge(v1, v3);
-	graph.setEdgeWeight(e1, 2);
-	FlowGraphEdge e2 = graph.addEdge(v4, v3);
-	graph.setEdgeWeight(e2, 5);
-	FlowGraphEdge e3 = graph.addEdge(v4, v2);
+	FlowGraphNode va  =  new FlowGraphNode("a");
+	FlowGraphNode v1  =  new FlowGraphNode("1");
+	FlowGraphNode v2  =  new FlowGraphNode("2");
+	FlowGraphNode v3  =  new FlowGraphNode("3");
+	FlowGraphNode v4  =  new FlowGraphNode("4");
+	FlowGraphNode v5  =  new FlowGraphNode("5");
+	FlowGraphNode v6  =  new FlowGraphNode("6");
+	FlowGraphNode v7  =  new FlowGraphNode("7");
+	FlowGraphNode v8  =  new FlowGraphNode("8");
+	FlowGraphNode v9  = new FlowGraphNode("9");
+	FlowGraphNode v10 = new FlowGraphNode("10");
+	FlowGraphNode v11 = new FlowGraphNode("11");
+	FlowGraphNode v12 = new FlowGraphNode("12");
+	FlowGraphNode v13 = new FlowGraphNode("13");
+	FlowGraphNode vl  = new FlowGraphNode("l");
+	FlowGraphNode v14 = new FlowGraphNode("14");
+	FlowGraphNode veq = new FlowGraphNode("eq");
+	FlowGraphNode vr  = new FlowGraphNode("r");
+	FlowGraphNode v21 = new FlowGraphNode("21");
+	FlowGraphNode vex = new FlowGraphNode("ex");
+	FlowGraphNode v22 = new FlowGraphNode("22");
+	
+	graph.addVertex(va );
+	graph.addVertex(v1 );
+	graph.addVertex(v2 );
+	graph.addVertex(v3 );
+	graph.addVertex(v4 );
+	graph.addVertex(v5 );
+	graph.addVertex(v6 );
+	graph.addVertex(v7 );
+	graph.addVertex(v8 );
+	graph.addVertex(v9 );
+	graph.addVertex(v10);
+	graph.addVertex(v11);
+	graph.addVertex(v12);
+	graph.addVertex(v13);
+	graph.addVertex(vl );
+	graph.addVertex(v14);
+	graph.addVertex(veq);
+	graph.addVertex(vr );
+	graph.addVertex(v21);
+	graph.addVertex(vex);
+	graph.addVertex(v22);
+
+
+	FlowGraphEdge e1 = graph.addEdge(veq, v21);
+	graph.setEdgeWeight(e1, 1);
+	FlowGraphEdge e2 = graph.addEdge(v21, v1);
+	graph.setEdgeWeight(e2, 1);
+	FlowGraphEdge e3 = graph.addEdge(v1, v2);
 	graph.setEdgeWeight(e3,10);
-	FlowGraphEdge e4 = graph.addEdge(v4, v5);
-	graph.setEdgeWeight(e4, 6);
-	FlowGraphEdge e5 = graph.addEdge(v2, v3);
-	graph.setEdgeWeight(e5, 8);
-	FlowGraphEdge e6 = graph.addEdge(v2, v5);
-	graph.setEdgeWeight(e6, 5);
-	FlowGraphEdge e7 = graph.addEdge(v5, v2);
-	graph.setEdgeWeight(e7, 9);
-	FlowGraphEdge e8 = graph.addEdge(v5, v3);
-	graph.setEdgeWeight(e8, 7);
-	FlowGraphEdge e9 = graph.addEdge(v3, v4);
-	graph.setEdgeWeight(e9, 12);
-	FlowGraphEdge e10 = graph.addEdge(v3, v2);
-	graph.setEdgeWeight(e10, 6);
-	FlowGraphEdge e11 = graph.addEdge(v3, v5);
-	graph.setEdgeWeight(e11, 3);
+	FlowGraphEdge e4 = graph.addEdge(v2, v3);
+	graph.setEdgeWeight(e4, 1);
+	FlowGraphEdge e5 = graph.addEdge(v3, v3);
+	graph.setEdgeWeight(e5, 1);
+	FlowGraphEdge e6 = graph.addEdge(v3, v14);
+	graph.setEdgeWeight(e6, 1);
+	FlowGraphEdge e7 = graph.addEdge(v14, v4);
+	graph.setEdgeWeight(e7, 1);
+	FlowGraphEdge e8 = graph.addEdge(v4, v22);
+	graph.setEdgeWeight(e8, 1);
+	FlowGraphEdge e9 = graph.addEdge(v22, v5);
+	graph.setEdgeWeight(e9, 1);
+	FlowGraphEdge e10 = graph.addEdge(v5, v6);
+	graph.setEdgeWeight(e10, 1);
+	FlowGraphEdge e11 = graph.addEdge(v6, v7);
+	graph.setEdgeWeight(e11, 1);
+
+	FlowGraphEdge e12 = graph.addEdge(v6, v8);
+	graph.setEdgeWeight(e12, 1);
+
+	FlowGraphEdge e13 = graph.addEdge(v2, v10);
+	graph.setEdgeWeight(e13, 1);
+
+	FlowGraphEdge e14 = graph.addEdge(v10, v11);
+	graph.setEdgeWeight(e14, 1);
+
+	FlowGraphEdge e15 = graph.addEdge(v11, v12);
+	graph.setEdgeWeight(e15, 1);
+
+	FlowGraphEdge e16 = graph.addEdge(v11, v13);
+	graph.setEdgeWeight(e16, 1);
+
+	FlowGraphEdge e17 = graph.addEdge(v2, v9);
+	graph.setEdgeWeight(e17, 1);
+
+	FlowGraphEdge e18 = graph.addEdge(v1, v9);
+	graph.setEdgeWeight(e18, 1);
+
+	FlowGraphEdge e19 = graph.addEdge(v4, v9);
+	graph.setEdgeWeight(e19, 1);
+
 
 
 	FlowGraphNode edgeSource1 = v1;
