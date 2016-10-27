@@ -180,6 +180,7 @@ function update () {
 
   function restoreLinksAndNodes() {
       console.log("Restoring the links and the nodes!");
+    
     link
       .style("stroke", LINK_COLOR)
       .style("marker-end", function () { return 'url(#arrowHead)'; })
@@ -581,7 +582,7 @@ if (!String.prototype.format) {
   };
 }
 
-/*
+
 var linkL = svg.select("#links").selectAll("path.link")
 
 var socket =  io.connect('http://localhost:9092');
@@ -622,4 +623,3 @@ socket.on('chatevent', function(data) {
 
 });
 
-*/

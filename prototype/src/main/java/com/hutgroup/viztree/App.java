@@ -140,27 +140,27 @@ public class App
 
 	FlowGraphNode edgeSource1 = v1;
 	FlowGraphNode edgeTarget1 = v3;
-	double oldWeight1 = 2;
+	double oldWeight1 = 1;
 	double newWeight1 = 10;
 
 	FlowGraphNode edgeSource2 = v4;
 	FlowGraphNode edgeTarget2 = v3;
-	double oldWeight2 = 5;
+	double oldWeight2 = 1;
 	double newWeight2 = 12;
 
 	FlowGraphNode edgeSource3 = v4;
 	FlowGraphNode edgeTarget3 = v2;
-	double oldWeight3 = 10;
+	double oldWeight3 = 1;
 	double newWeight3 = 2;
 
 	FlowGraphNode edgeSource4 = v4;
 	FlowGraphNode edgeTarget4 = v5;
-	double oldWeight4 = 6;
+	double oldWeight4 = 1;
 	double newWeight4 = 12;
 
 	FlowGraphNode edgeSource5 = v2;
 	FlowGraphNode edgeTarget5 = v3;
-	double oldWeight5 = 8;
+	double oldWeight5 = 1;
 	double newWeight5 = 4;
 
 	updateQueue = new LinkedList<>();
