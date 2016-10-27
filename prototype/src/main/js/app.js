@@ -6,9 +6,10 @@ var OPACITY = {
     NODE_DEFAULT: 0.9,
     NODE_FADED: 0.1,
     NODE_HIGHLIGHT: 0.8,
-    LINK_DEFAULT: 0.6,
+    LINK_DEFAULT: 0.1,
     LINK_FADED: 0.05,
-    LINK_HIGHLIGHT: 0.9
+    LINK_HIGHLIGHT: 0.9,
+    LINK_IN_CHECK: 0.7
   },
   TYPES = ["Asset", "Expense", "Revenue", "Equity", "Liability"],
   TYPE_COLORS = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02", "#a6761d"],
@@ -583,14 +584,14 @@ if (!String.prototype.format) {
 }
 
 
-var linkL = svg.select("#links").selectAll("path.link")
 
 var socket =  io.connect('http://localhost:9092');
 socket.on('chatevent', function(data) {
     console.log("Recieved a chat event from the server:");
     console.log(data);
+    var linkL = svg.select("#links").selectAll("path.link")
 
-    if(data.weight >= 10){
+    if(data.weight >= 20){
 	console.log("Weight gone up above");
 	linkL.filter(function (d) { return d.id == data.edge; })
 	    .transition()
@@ -618,8 +619,9 @@ socket.on('chatevent', function(data) {
 	    })
 	    .attr("d", path)	
 	    .style("stroke", LINK_COLOR)
-	    .style("opacity", OPACITY.LINK_FADED);
+	    .style("opacity", OPACITY.LINK_IN_CHECK);
     }
 
 });
+
 
