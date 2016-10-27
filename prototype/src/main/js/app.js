@@ -511,38 +511,41 @@ var exampleNodes = [
   {"type":"Order Manager","id":"a","parent":null,"name":"Order Managers"},
   {"type":"Order Manager","id":1,"parent":"a","number":"101","name":"New"},
   {"type":"Order Manager","id":2,"parent":"a","number":"120","name":"Reserved"},
-  {"type":"Order Manager","id":3,"parent":"a","number":"140","name":"Booked"},
-  {"type":"Order Manager","id":4,"parent":"a","number":"150","name":"Delayed"},
-  {"type":"Order Manager","id":5,"parent":"a","number":"160","name":"Created Shipments"},
-  {"type":"Order Manager","id":6,"parent":"a","number":"170","name":"Shipment Dispatched"},
-  {"type":"Order Manager","id":7,"parent":"a","number":"175","name":"Shipment Reserved"},
-  {"type":"Order Manager","id":8,"parent":"a","number":"178","name":"Bundle Reserved"},
-  {"type":"Order Manager","id":9,"parent":"a","number":"180","name":"Bundle Dispatched"},
-  {"type":"Order Manager","id":10,"parent":"a","number":"188","name":"Created Bundle"},
+  {"type":"Order Manager","id":3,"parent":"a","number":"140","name":"Changed"},
+  {"type":"Order Manager","id":4,"parent":"a","number":"150","name":"Released"},
+  {"type":"Order Manager","id":5,"parent":"a","number":"160","name":"Dispatched"},
+  {"type":"Order Manager","id":6,"parent":"a","number":"170","name":"Refund Pending"},
+  {"type":"Order Manager","id":7,"parent":"a","number":"175","name":"Refunded"},
+  {"type":"Order Manager","id":8,"parent":"a","number":"178","name":"Refund Failed"},
+  {"type":"Order Manager","id":9,"parent":"a","number":"180","name":"Ms-picks"},
+  {"type":"Order Manager","id":10,"parent":"a","number":"188","name":"Removed"},
+  {"type":"Order Manager","id":11,"parent":"a","number":"178","name":"Cancel Pending"},
+  {"type":"Order Manager","id":12,"parent":"a","number":"180","name":"Cancelled"},
+  {"type":"Order Manager","id":13,"parent":"a","number":"188","name":"Cancel Failed"},
   {"type":"Sherlock","id":"l","parent":null,"number":"l","name":"Sherlock"},
-  {"type":"Sherlock","id":11,"parent":"l","number":"210","name":"Sherlock Dummy 2"},
-  {"type":"Sherlock","id":12,"parent":"l","number":"215","name":"Sherlock Dummy 3"},
-  {"type":"Sherlock","id":13,"parent":"l","number":"220","name":"Sherlock Dummy 4"},
-  {"type":"Sherlock","id":14,"parent":"l","number":"230","name":"Sherlock Dummy 5"},
-  {"type":"Sherlock","id":15,"parent":"l","number":"240","name":"Sherlock Dummy 6"},
-  {"type":"Sherlock","id":16,"parent":"l","number":"250","name":"Sherlock Dummy 7"},
+  {"type":"Sherlock","id":12,"parent":"l","number":"210","name":"Sherlock Dummy 2"},
+  {"type":"Sherlock","id":13,"parent":"l","number":"215","name":"Sherlock Dummy 3"},
+  {"type":"Sherlock","id":14,"parent":"l","number":"220","name":"Sherlock Dummy 4"},
+  {"type":"Sherlock","id":15,"parent":"l","number":"230","name":"Sherlock Dummy 5"},
+  {"type":"Sherlock","id":16,"parent":"l","number":"240","name":"Sherlock Dummy 6"},
+  {"type":"Sherlock","id":17,"parent":"l","number":"250","name":"Sherlock Dummy 7"},
   {"type":"Elysium","id":"eq","parent":null,"number":"eq","name":"Elysium"},
   {"type":"Fraud","id":"r","parent":null,"number":"r","name":"Fraud "},
   {"type":"Fraud","id":"or","parent":"r","number":"","name":"Fraud Dummy 2"},
-  {"type":"Fraud","id":17,"parent":"or","number":"310","name":"Fraud Dummy 3"},
+  {"type":"Fraud","id":18,"parent":"or","number":"310","name":"Fraud Dummy 3"},
   {"type":"Fraud","id":"nor","parent":"r","number":"","name":"Fraud Dummy 4"},
-  {"type":"Fraud","id":18,"parent":"nor","number":"810","name":"Fraud Dummy 5"},
-  {"type":"Fraud","id":19,"parent":"nor","number":"910","name":"Fraud Dummy 6"},
-  {"type":"Fraud","id":20,"parent":"nor","number":"960","name":"Fraud Dummy 7"},
+  {"type":"Fraud","id":19,"parent":"nor","number":"810","name":"Fraud Dummy 5"},
+  {"type":"Fraud","id":20,"parent":"nor","number":"910","name":"Fraud Dummy 6"},
+  {"type":"Fraud","id":21,"parent":"nor","number":"960","name":"Fraud Dummy 7"},
   {"type":"Warehouse Manager","id":"ex","parent":null,"number":"ex","name":"Warehouse Manager"},
-  {"type":"Warehouse Manager","id":21,"parent":"ex","number":"500","name":"Warehouse Manager Dummy 2"},
-  {"type":"Warehouse Manager","id":22,"parent":"ex","number":"510","name":"Warehouse Manager Dummy 3"},
-  {"type":"Warehouse Manager","id":23,"parent":"ex","number":"540","name":"Warehouse Manager Dummy 4"},
-  {"type":"Warehouse Manager","id":24,"parent":"ex","number":"560","name":"Warehouse Manager Dummy 5"},
-  {"type":"Warehouse Manager","id":25,"parent":"ex","number":"570","name":"Warehouse Manager Dummy 6"},
-  {"type":"Warehouse Manager","id":26,"parent":"ex","number":"576","name":"Warehouse Manager Dummy 7"},
-  {"type":"Warehouse Manager","id":27,"parent":"ex","number":"610","name":"Warehouse Manager Dummy 8"},
-  {"type":"Warehouse Manager","id":28,"parent":"ex","number":"750","name":"Warehouse Manager Dummy 9"}
+  {"type":"Warehouse Manager","id":22,"parent":"ex","number":"500","name":"Warehouse Manager Dummy 2"},
+  {"type":"Warehouse Manager","id":23,"parent":"ex","number":"510","name":"Warehouse Manager Dummy 3"},
+  {"type":"Warehouse Manager","id":24,"parent":"ex","number":"540","name":"Warehouse Manager Dummy 4"},
+  {"type":"Warehouse Manager","id":25,"parent":"ex","number":"560","name":"Warehouse Manager Dummy 5"},
+  {"type":"Warehouse Manager","id":26,"parent":"ex","number":"570","name":"Warehouse Manager Dummy 6"},
+  {"type":"Warehouse Manager","id":27,"parent":"ex","number":"576","name":"Warehouse Manager Dummy 7"},
+  {"type":"Warehouse Manager","id":28,"parent":"ex","number":"610","name":"Warehouse Manager Dummy 8"},
+  {"type":"Warehouse Manager","id":29,"parent":"ex","number":"750","name":"Warehouse Manager Dummy 9"}
 ]
 
 var exampleLinks = [
@@ -626,7 +629,7 @@ if (!String.prototype.format) {
   };
 }
 
-
+/*
 var linkL = svg.select("#links").selectAll("path.link")
 
 var socket =  io.connect('http://localhost:9092');
@@ -667,3 +670,4 @@ socket.on('chatevent', function(data) {
 
 });
 
+*/
