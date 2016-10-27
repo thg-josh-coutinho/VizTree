@@ -13,9 +13,12 @@ var OPACITY = {
   TYPES = ["Asset", "Expense", "Revenue", "Equity", "Liability"],
   TYPE_COLORS = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02", "#a6761d"],
   TYPE_HIGHLIGHT_COLORS = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494"],
-  LINK_COLOR = "#b3b3b3",
+  /*LINK_COLOR = "#b3b3b3",
   INFLOW_COLOR = "#2E86D1",
-  OUTFLOW_COLOR = "#D63028",
+  OUTFLOW_COLOR = "#D63028",*/
+  LINK_COLOR = "#2E86D1",
+  INFLOW_COLOR = "#2E86D1",
+  OUTFLOW_COLOR = "#D63028",    
   NODE_WIDTH = 36,
   COLLAPSER = {
     RADIUS: NODE_WIDTH / 2,
@@ -261,9 +264,9 @@ function update () {
     if (!isTransitioning) {
       showTooltip().select(".value").text(function () {
         if (d.direction > 0) {
-          return d.source.name + " â†’ " + d.target.name + "\n" + formatNumber(d.value);
+          return d.source.name + " - " + d.target.name + "\n" + formatNumber(d.value);
         }
-        return d.target.name + " â† " + d.source.name + "\n" + formatNumber(d.value);
+        return d.target.name + " - " + d.source.name + "\n" + formatNumber(d.value);
       });
 
       d3.select(this)
@@ -505,41 +508,41 @@ function update () {
 }
 
 var exampleNodes = [
-  {"type":"Asset","id":"a","parent":null,"name":"Assets"},
-  {"type":"Asset","id":1,"parent":"a","number":"101","name":"Cash"},
-  {"type":"Asset","id":2,"parent":"a","number":"120","name":"Accounts Receivable"},
-  {"type":"Asset","id":3,"parent":"a","number":"140","name":"Merchandise Inventory"},
-  {"type":"Asset","id":4,"parent":"a","number":"150","name":"Supplies"},
-  {"type":"Asset","id":5,"parent":"a","number":"160","name":"Prepaid Insurance"},
-  {"type":"Asset","id":6,"parent":"a","number":"170","name":"Land"},
-  {"type":"Asset","id":7,"parent":"a","number":"175","name":"Buildings"},
-  {"type":"Asset","id":8,"parent":"a","number":"178","name":"Acc. Depreciation Buildings"},
-  {"type":"Asset","id":9,"parent":"a","number":"180","name":"Equipment"},
-  {"type":"Asset","id":10,"parent":"a","number":"188","name":"Acc. Depreciation Equipment"},
-  {"type":"Liability","id":"l","parent":null,"number":"l","name":"Liabilities"},
-  {"type":"Liability","id":11,"parent":"l","number":"210","name":"Notes Payable"},
-  {"type":"Liability","id":12,"parent":"l","number":"215","name":"Accounts Payable"},
-  {"type":"Liability","id":13,"parent":"l","number":"220","name":"Wages Payable"},
-  {"type":"Liability","id":14,"parent":"l","number":"230","name":"Interest Payable"},
-  {"type":"Liability","id":15,"parent":"l","number":"240","name":"Unearned Revenues"},
-  {"type":"Liability","id":16,"parent":"l","number":"250","name":"Mortage Loan Payable"},
-  {"type":"Equity","id":"eq","parent":null,"number":"eq","name":"Equity"},
-  {"type":"Revenue","id":"r","parent":null,"number":"r","name":"Revenues"},
-  {"type":"Revenue","id":"or","parent":"r","number":"","name":"Operating Revenue"},
-  {"type":"Revenue","id":17,"parent":"or","number":"310","name":"Service Revenues"},
-  {"type":"Revenue","id":"nor","parent":"r","number":"","name":"Non-Operating Revenue"},
-  {"type":"Revenue","id":18,"parent":"nor","number":"810","name":"Interest Revenues"},
-  {"type":"Revenue","id":19,"parent":"nor","number":"910","name":"Asset Sale Gain"},
-  {"type":"Revenue","id":20,"parent":"nor","number":"960","name":"Asset Sale Loss"},
-  {"type":"Expense","id":"ex","parent":null,"number":"ex","name":"Expenses"},
-  {"type":"Expense","id":21,"parent":"ex","number":"500","name":"Salaries Expense"},
-  {"type":"Expense","id":22,"parent":"ex","number":"510","name":"Wages Expense"},
-  {"type":"Expense","id":23,"parent":"ex","number":"540","name":"Supplies Expense"},
-  {"type":"Expense","id":24,"parent":"ex","number":"560","name":"Rent Expense"},
-  {"type":"Expense","id":25,"parent":"ex","number":"570","name":"Utilities Expense"},
-  {"type":"Expense","id":26,"parent":"ex","number":"576","name":"Telephone Expense"},
-  {"type":"Expense","id":27,"parent":"ex","number":"610","name":"Advertising Expense"},
-  {"type":"Expense","id":28,"parent":"ex","number":"750","name":"Depreciation Expense"}
+  {"type":"Order Manager","id":"a","parent":null,"name":"Order Managers"},
+  {"type":"Order Manager","id":1,"parent":"a","number":"101","name":"New"},
+  {"type":"Order Manager","id":2,"parent":"a","number":"120","name":"Reserved"},
+  {"type":"Order Manager","id":3,"parent":"a","number":"140","name":"Booked"},
+  {"type":"Order Manager","id":4,"parent":"a","number":"150","name":"Delayed"},
+  {"type":"Order Manager","id":5,"parent":"a","number":"160","name":"Created Shipments"},
+  {"type":"Order Manager","id":6,"parent":"a","number":"170","name":"Shipment Dispatched"},
+  {"type":"Order Manager","id":7,"parent":"a","number":"175","name":"Shipment Reserved"},
+  {"type":"Order Manager","id":8,"parent":"a","number":"178","name":"Bundle Reserved"},
+  {"type":"Order Manager","id":9,"parent":"a","number":"180","name":"Bundle Dispatched"},
+  {"type":"Order Manager","id":10,"parent":"a","number":"188","name":"Created Bundle"},
+  {"type":"Sherlock","id":"l","parent":null,"number":"l","name":"Sherlock"},
+  {"type":"Sherlock","id":11,"parent":"l","number":"210","name":"Sherlock Dummy 2"},
+  {"type":"Sherlock","id":12,"parent":"l","number":"215","name":"Sherlock Dummy 3"},
+  {"type":"Sherlock","id":13,"parent":"l","number":"220","name":"Sherlock Dummy 4"},
+  {"type":"Sherlock","id":14,"parent":"l","number":"230","name":"Sherlock Dummy 5"},
+  {"type":"Sherlock","id":15,"parent":"l","number":"240","name":"Sherlock Dummy 6"},
+  {"type":"Sherlock","id":16,"parent":"l","number":"250","name":"Sherlock Dummy 7"},
+  {"type":"Elysium","id":"eq","parent":null,"number":"eq","name":"Elysium"},
+  {"type":"Fraud","id":"r","parent":null,"number":"r","name":"Fraud "},
+  {"type":"Fraud","id":"or","parent":"r","number":"","name":"Fraud Dummy 2"},
+  {"type":"Fraud","id":17,"parent":"or","number":"310","name":"Fraud Dummy 3"},
+  {"type":"Fraud","id":"nor","parent":"r","number":"","name":"Fraud Dummy 4"},
+  {"type":"Fraud","id":18,"parent":"nor","number":"810","name":"Fraud Dummy 5"},
+  {"type":"Fraud","id":19,"parent":"nor","number":"910","name":"Fraud Dummy 6"},
+  {"type":"Fraud","id":20,"parent":"nor","number":"960","name":"Fraud Dummy 7"},
+  {"type":"Warehouse Manager","id":"ex","parent":null,"number":"ex","name":"Warehouse Manager"},
+  {"type":"Warehouse Manager","id":21,"parent":"ex","number":"500","name":"Warehouse Manager Dummy 2"},
+  {"type":"Warehouse Manager","id":22,"parent":"ex","number":"510","name":"Warehouse Manager Dummy 3"},
+  {"type":"Warehouse Manager","id":23,"parent":"ex","number":"540","name":"Warehouse Manager Dummy 4"},
+  {"type":"Warehouse Manager","id":24,"parent":"ex","number":"560","name":"Warehouse Manager Dummy 5"},
+  {"type":"Warehouse Manager","id":25,"parent":"ex","number":"570","name":"Warehouse Manager Dummy 6"},
+  {"type":"Warehouse Manager","id":26,"parent":"ex","number":"576","name":"Warehouse Manager Dummy 7"},
+  {"type":"Warehouse Manager","id":27,"parent":"ex","number":"610","name":"Warehouse Manager Dummy 8"},
+  {"type":"Warehouse Manager","id":28,"parent":"ex","number":"750","name":"Warehouse Manager Dummy 9"}
 ]
 
 var exampleLinks = [
@@ -630,16 +633,37 @@ var socket =  io.connect('http://localhost:9092');
 socket.on('chatevent', function(data) {
     console.log("Recieved a chat event from the server:");
     console.log(data);
-    linkL
-        .filter(function(d) { return d.id == data.edge; })
-	.transition()
-        .duration(300)
-	.style("stroke-WIDTH", function(d) {
-	    console.log("Previous: {0}, New: {1}".format(d.thickness, data.weight));
-	    return data.weight;
-	})
-	.attr("d", path)
-	.style("opacity", OPACITY.LINK_DEFAULT);
+
+    if(data.weight >= 10){
+	console.log("Weight gone up above");
+	linkL.filter(function (d) { return d.id == data.edge; })
+	    .transition()
+	    .duration(500)
+	    .style("marker-end", function () { return 'url(#arrowHeadInflow)'; })
+	    .style("stroke", OUTFLOW_COLOR)
+	    .style("stroke-WIDTH", function(d) {
+		console.log("Previous: {0}, New: {1}".format(d.thickness, data.weight));
+		return data.weight;
+	    })
+	    .attr("d", path)
+	    .style("opacity", OPACITY.LINK_HIGHLIGHT);
+
+	
+    }
+    else {
+	console.log("Colour reset to 0");
+	linkL.filter(function (d) { return d.id == data.edge; })
+	    .transition()
+	    .duration(500)
+	    .style("marker-end", function () { return 'url(#arrowHeadInflow)'; })
+	    .style("stroke-WIDTH", function(d) {
+		console.log("Previous: {0}, New: {1}".format(d.thickness, data.weight));
+		return data.weight;
+	    })
+	    .attr("d", path)	
+	    .style("stroke", LINK_COLOR)
+	    .style("opacity", OPACITY.LINK_FADED);
+    }
 
 });
 
