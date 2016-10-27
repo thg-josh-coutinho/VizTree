@@ -1,6 +1,17 @@
 package com.hutgroup.viztree;
 
-import java.util.*;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.TextMessage;
+import javax.jms.Session;
+
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.stream.*;
 import java.util.function.*;
 import com.hutgroup.viztree.graph.FlowGraphListener;
@@ -8,13 +19,15 @@ import org.jgrapht.event.FlowGraphEdgeChangeEvent;
 import org.jgrapht.graph.FlowGraphEdge;
 import org.jgrapht.graph.FlowGraphNode;
 import org.jgrapht.graph.FlowGraph;
+import org.jgrapht.Graph;
 
 public class App 
 {
     static int counter = 0;
     static LinkedList<FlowGraphEdgeChangeEvent> updateQueue;
     static FlowGraph graph;
-    public static void main( String[] args )
+    static MessageConsumer consumer;
+    public static void main( String[] args ) throws Exception
     {
 	Scanner sc = new Scanner(System.in);
 
@@ -40,8 +53,21 @@ public class App
 	}
     }	
 
-    private static void init()
+    private static void init() throws Exception
     {
+
+
+	ConnectionFactory factory = 
+	    new ActiveMQConnectionFactory(); 
+	Connection con = factory.createConnection();
+	try {
+	    Session session = 
+		con.createSession(false, Session.AUTO_ACKNOWLEDGE); 
+	    consumer = session.createConsumer(session.createQueue("SampleQueue"));
+	    con.start();                                            
+	} catch (Exception e) { System.out.println("Failed to connect to ActiveMQ!\n" + e); System.exit(0); }
+
+
 	graph = new FlowGraph();
 	graph.addGraphListener(new FlowGraphListener());
 	FlowGraphNode va  =  new FlowGraphNode("a");
@@ -89,51 +115,51 @@ public class App
 	graph.addVertex(v22);
 
 
-	FlowGraphEdge e1 = graph.addEdge(veq, v21);
-	graph.setEdgeWeight(e1, 1);
-	FlowGraphEdge e2 = graph.addEdge(v21, v1);
-	graph.setEdgeWeight(e2, 1);
-	FlowGraphEdge e3 = graph.addEdge(v1, v2);
-	graph.setEdgeWeight(e3,10);
-	FlowGraphEdge e4 = graph.addEdge(v2, v3);
-	graph.setEdgeWeight(e4, 1);
-	FlowGraphEdge e5 = graph.addEdge(v3, v3);
-	graph.setEdgeWeight(e5, 1);
-	FlowGraphEdge e6 = graph.addEdge(v3, v14);
-	graph.setEdgeWeight(e6, 1);
-	FlowGraphEdge e7 = graph.addEdge(v14, v4);
-	graph.setEdgeWeight(e7, 1);
-	FlowGraphEdge e8 = graph.addEdge(v4, v22);
-	graph.setEdgeWeight(e8, 1);
-	FlowGraphEdge e9 = graph.addEdge(v22, v5);
-	graph.setEdgeWeight(e9, 1);
-	FlowGraphEdge e10 = graph.addEdge(v5, v6);
-	graph.setEdgeWeight(e10, 1);
-	FlowGraphEdge e11 = graph.addEdge(v6, v7);
-	graph.setEdgeWeight(e11, 1);
-
-	FlowGraphEdge e12 = graph.addEdge(v6, v8);
-	graph.setEdgeWeight(e12, 1);
-
-	FlowGraphEdge e13 = graph.addEdge(v2, v10);
-	graph.setEdgeWeight(e13, 1);
-
+	FlowGraphEdge e1 = graph.addEdge (veq, v21);
+	graph.setEdgeWeight(e1, 1);	            
+	FlowGraphEdge e2 = graph.addEdge (v21, v1); 
+	graph.setEdgeWeight(e2, 1);	            
+	FlowGraphEdge e3 = graph.addEdge (v1, v2);  
+	graph.setEdgeWeight(e3,10);	            
+	FlowGraphEdge e4 = graph.addEdge (v2, v3);  
+	graph.setEdgeWeight(e4, 1);	            
+	FlowGraphEdge e5 = graph.addEdge (v3, v3);  
+	graph.setEdgeWeight(e5, 1);	            
+	FlowGraphEdge e6 = graph.addEdge (v3, v14); 
+	graph.setEdgeWeight(e6, 1);	            
+	FlowGraphEdge e7 = graph.addEdge (v14, v4); 
+	graph.setEdgeWeight(e7, 1);	            
+	FlowGraphEdge e8 = graph.addEdge (v4, v22); 
+	graph.setEdgeWeight(e8, 1);	            
+	FlowGraphEdge e9 = graph.addEdge (v22, v5); 
+	graph.setEdgeWeight(e9, 1);	            
+	FlowGraphEdge e10 = graph.addEdge(v5, v6);  
+	graph.setEdgeWeight(e10, 1);	            
+	FlowGraphEdge e11 = graph.addEdge(v6, v7);  
+	graph.setEdgeWeight(e11, 1);	            
+					            
+	FlowGraphEdge e12 = graph.addEdge(v6, v8);  
+	graph.setEdgeWeight(e12, 1);	            
+					            
+	FlowGraphEdge e13 = graph.addEdge(v2, v10); 
+	graph.setEdgeWeight(e13, 1);	            
+					            
 	FlowGraphEdge e14 = graph.addEdge(v10, v11);
-	graph.setEdgeWeight(e14, 1);
-
+	graph.setEdgeWeight(e14, 1);	            
+					            
 	FlowGraphEdge e15 = graph.addEdge(v11, v12);
-	graph.setEdgeWeight(e15, 1);
-
+	graph.setEdgeWeight(e15, 1);	            
+					            
 	FlowGraphEdge e16 = graph.addEdge(v11, v13);
-	graph.setEdgeWeight(e16, 1);
-
-	FlowGraphEdge e17 = graph.addEdge(v2, v9);
-	graph.setEdgeWeight(e17, 1);
-
-	FlowGraphEdge e18 = graph.addEdge(v1, v9);
-	graph.setEdgeWeight(e18, 1);
-
-	FlowGraphEdge e19 = graph.addEdge(v4, v9);
+	graph.setEdgeWeight(e16, 1);	            
+					            
+	FlowGraphEdge e17 = graph.addEdge(v2, v9);  
+	graph.setEdgeWeight(e17, 1);	            
+					            
+	FlowGraphEdge e18 = graph.addEdge(v1, v9);  
+	graph.setEdgeWeight(e18, 1);	            
+					            
+	FlowGraphEdge e19 = graph.addEdge(v4, v9);  
 	graph.setEdgeWeight(e19, 1);
 
 
@@ -180,14 +206,56 @@ public class App
 
     private static FlowGraphEdgeChangeEvent nextUpdate()
     {
-	
-	counter = (counter+1)%updateQueue.size();
+	System.out.println("Requesting a new update from the graph");
+	for(int i = 0; i <= 5; i++){
+	    try {
+
+		Message msg = consumer.receive();
+		if (! (msg instanceof TextMessage)) {
+		    throw new RuntimeException("Expected a TextMessage");
+		}
+		TextMessage tm = (TextMessage) msg;
+		System.out.println("Delivering: " + tm.getText());		
+		return deserializeFlowGraphEdgeChangeEvent(graph, tm.getText());
+
+	    } catch (Exception e) {
+		try {
+		    Thread.sleep((int)(1000*Math.pow(2, i)));
+		} catch(Exception e2) {
+		    
+		}
+	    }
+	}
+
+	System.err.println("Failed to retrieve an update 6 times, Quitting...");
+	System.exit(0);
+	return null;
+	/*counter = (counter+1)%updateQueue.size();
 	
 	FlowGraphEdgeChangeEvent e = updateQueue.get(counter);
 	e.setNewWeight(Math.random()*30);
-	return e;
+	return e;*/
     }
 
+    private static FlowGraphEdgeChangeEvent deserializeFlowGraphEdgeChangeEvent(Graph g, String msg)
+    {
+
+	String parts[] = msg.split("|");
+	String edgeSourceString = parts[0];
+	String edgeTargetString = parts[1];
+	String newWeightString = parts[2];
+
+	FlowGraphNode edgeSource = new FlowGraphNode(edgeSourceString);
+	FlowGraphNode edgeTarget = new FlowGraphNode(edgeTargetString);
+	FlowGraphEdge e = graph.getEdge(edgeSource, edgeTarget);
+	double oldWeight = graph.getEdgeWeight(e);
+	double newWeight = Double.parseDouble(newWeightString);
+
+
+	return new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e,
+					    edgeSource, edgeTarget, oldWeight, newWeight);
+    }
+    
     private static String[] getFlowGraphArgs(String []args)
     {
 	throw new UnsupportedOperationException("Unimplemented");
@@ -198,7 +266,7 @@ public class App
     }
     private static String[] getUpdateStreamArgs(String []args)
     {
-    throw new UnsupportedOperationException("Unimplemented");
+	throw new UnsupportedOperationException("Unimplemented");
     }
 
 }

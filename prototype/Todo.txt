@@ -1,6 +1,7 @@
 * Need to have all of them with the same original opacity
 * Need to add a proper graph
 * Need a way to configure arbitrary graphs
+* Need to generalize input sources
 * Why does it not go back to blue when the thickness shrinks to less than 10
 * Why does it get highlighted to red even though the thickness is not above the default thickness
 

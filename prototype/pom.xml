@@ -33,6 +33,18 @@
       <artifactId>netty-socketio</artifactId>
       <version>1.7.13-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-all</artifactId>
+      <version>5.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.jms</groupId>
+      <artifactId>jms</artifactId>
+      <version>1.1</version>
+    </dependency>
+    
   </dependencies>
 
   <build>
