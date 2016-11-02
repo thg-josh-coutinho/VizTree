@@ -49,45 +49,44 @@ public class App
     private static void update(FlowGraph g, FlowGraphEdgeChangeEvent update)
     {
 	if(update == null) { System.out.println("Null update"); return; }
+	
 	g.setEdgeWeight(update.getEdge(), update.getNewWeight());
-	try {
-	    Thread.sleep((int)(200));
-	}
+
+	try {  Thread.sleep((int)(200)); }
 	catch(Exception e) {
 	    System.err.println("Err occurred when pausing within update inside App.java");
 	    System.err.println(e.toString());
 	}
+
     }
 
     private static void initActiveMQConsumer()
     {
 	try{
-	ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+	    ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
  
-	// Create a Connection
-	Connection connection = connectionFactory.createConnection();
-	connection.start();
+	    Connection connection = connectionFactory.createConnection();
+	    connection.start();
+
+	    Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+	    Destination destination = session.createQueue("SampleQueue");
+
+	    consumer = session.createConsumer(destination);
+
+	    Message message = consumer.receive();
  
-	// Create a Session
-	Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
- 
-	// Create the destination (Topic or Queue)
-	Destination destination = session.createQueue("SampleQueue");
- 
-	// Create a MessageConsumer from the Session to the Topic or Queue
-	consumer = session.createConsumer(destination);
- 
-	// Wait for a message
-	Message message = consumer.receive();
- 
-	if (message instanceof TextMessage) {
-	    TextMessage textMessage = (TextMessage) message;
-	    String text = textMessage.getText();
-	    System.out.println("Received: " + text);
-	} else {
-	    System.out.println("Received: " + message);
+	    if (message instanceof TextMessage) {
+		TextMessage textMessage = (TextMessage) message;
+		String text = textMessage.getText();
+		System.out.println("Received: " + text);
+	    } else {
+		System.out.println("Received: " + message);
+	    }
+	} catch(Exception e) {
+	    System.out.println("Could not connect to activemq");
+	    System.exit(1);
 	}
-	}catch(Exception e) { System.out.println("Could not connect to activemq"); System.exit(1); }
+
     }
 
     private static void initGraph()
@@ -320,18 +319,7 @@ public class App
 	edgeMap = new HashMap<>();
 
 	initActiveMQConsumer();
-	    /*
-	ConnectionFactory factory = 
-	    new ActiveMQConnectionFactory(); 
-	Connection con = factory.createConnection();
-	try {
-	    Session session = 
-		con.createSession(false, Session.AUTO_ACKNOWLEDGE); 
-	    consumer = session.createConsumer(session.createQueue("SampleQueue"));
-	    con.start();                                            
-	} catch (Exception e) { System.out.println("Failed to connect to ActiveMQ!\n" + e); System.exit(0); }
 
-*/
 	initGraph();
 	
     }
