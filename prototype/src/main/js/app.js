@@ -8,7 +8,7 @@ var OPACITY = {
     NODE_HIGHLIGHT: 0.8,
     LINK_DEFAULT: 0.1,
     LINK_FADED: 0.05,
-    LINK_HIGHLIGHT: 0.9,
+    LINK_HIGHLIGHT: 0.8,
     LINK_IN_CHECK: 0.7
   },
   TYPES = ["Asset", "Expense", "Revenue", "Equity", "Liability"],

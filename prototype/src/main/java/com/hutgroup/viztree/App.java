@@ -21,17 +21,22 @@ import org.jgrapht.graph.FlowGraphNode;
 import org.jgrapht.graph.FlowGraph;
 import org.jgrapht.Graph;
 
-public class App 
+import com.josh.utils.Tuple;
+import java.util.*;
+
+public class App
 {
     static int counter = 0;
     static LinkedList<FlowGraphEdgeChangeEvent> updateQueue;
     static FlowGraph graph;
     static MessageConsumer consumer;
+    static Map<String, FlowGraphEdge> edgeMap;
     public static void main( String[] args ) throws Exception
     {
 	Scanner sc = new Scanner(System.in);
 
 	init();
+
 	sc.next();
 
 	Stream
@@ -43,6 +48,7 @@ public class App
 
     private static void update(FlowGraph g, FlowGraphEdgeChangeEvent update)
     {
+	if(update == null) { System.out.println("Null update"); return; }
 	g.setEdgeWeight(update.getEdge(), update.getNewWeight());
 	try {
 	    Thread.sleep((int)(200));
@@ -51,34 +57,52 @@ public class App
 	    System.err.println("Err occurred when pausing within update inside App.java");
 	    System.err.println(e.toString());
 	}
-    }	
+    }
 
-    private static void init() throws Exception
+    private static void initActiveMQConsumer()
     {
+	try{
+	ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+ 
+	// Create a Connection
+	Connection connection = connectionFactory.createConnection();
+	connection.start();
+ 
+	// Create a Session
+	Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+ 
+	// Create the destination (Topic or Queue)
+	Destination destination = session.createQueue("SampleQueue");
+ 
+	// Create a MessageConsumer from the Session to the Topic or Queue
+	consumer = session.createConsumer(destination);
+ 
+	// Wait for a message
+	Message message = consumer.receive();
+ 
+	if (message instanceof TextMessage) {
+	    TextMessage textMessage = (TextMessage) message;
+	    String text = textMessage.getText();
+	    System.out.println("Received: " + text);
+	} else {
+	    System.out.println("Received: " + message);
+	}
+	}catch(Exception e) { System.out.println("Could not connect to activemq"); System.exit(1); }
+    }
 
-
-	ConnectionFactory factory = 
-	    new ActiveMQConnectionFactory(); 
-	Connection con = factory.createConnection();
-	try {
-	    Session session = 
-		con.createSession(false, Session.AUTO_ACKNOWLEDGE); 
-	    consumer = session.createConsumer(session.createQueue("SampleQueue"));
-	    con.start();                                            
-	} catch (Exception e) { System.out.println("Failed to connect to ActiveMQ!\n" + e); System.exit(0); }
-
-
+    private static void initGraph()
+    {
 	graph = new FlowGraph();
 	graph.addGraphListener(new FlowGraphListener());
-	FlowGraphNode va  =  new FlowGraphNode("a");
-	FlowGraphNode v1  =  new FlowGraphNode("1");
-	FlowGraphNode v2  =  new FlowGraphNode("2");
-	FlowGraphNode v3  =  new FlowGraphNode("3");
-	FlowGraphNode v4  =  new FlowGraphNode("4");
-	FlowGraphNode v5  =  new FlowGraphNode("5");
-	FlowGraphNode v6  =  new FlowGraphNode("6");
-	FlowGraphNode v7  =  new FlowGraphNode("7");
-	FlowGraphNode v8  =  new FlowGraphNode("8");
+	FlowGraphNode va  = new FlowGraphNode("a");
+	FlowGraphNode v1  = new FlowGraphNode("1");
+	FlowGraphNode v2  = new FlowGraphNode("2");
+	FlowGraphNode v3  = new FlowGraphNode("3");
+	FlowGraphNode v4  = new FlowGraphNode("4");
+	FlowGraphNode v5  = new FlowGraphNode("5");
+	FlowGraphNode v6  = new FlowGraphNode("6");
+	FlowGraphNode v7  = new FlowGraphNode("7");
+	FlowGraphNode v8  = new FlowGraphNode("8");
 	FlowGraphNode v9  = new FlowGraphNode("9");
 	FlowGraphNode v10 = new FlowGraphNode("10");
 	FlowGraphNode v11 = new FlowGraphNode("11");
@@ -162,6 +186,28 @@ public class App
 	FlowGraphEdge e19 = graph.addEdge(v4, v9);  
 	graph.setEdgeWeight(e19, 1);
 
+	edgeMap.put(("eq|21"), e1 );
+	edgeMap.put(("21|1" ), e2 );  
+	edgeMap.put(("1|2" ), e3 );
+	edgeMap.put(("2|3" ), e4 );
+	edgeMap.put(("3|3" ), e5 );
+	edgeMap.put(("3|14"), e6 );
+	edgeMap.put(("14|4" ), e7 );  
+	edgeMap.put(("4|22"), e8 );
+	edgeMap.put(("225" ), e9 ); 
+	edgeMap.put(("5|6" ), e10);
+	edgeMap.put(("6|7" ), e11);
+	edgeMap.put(("6|8" ), e12);
+	edgeMap.put(("2|10"), e13);
+	edgeMap.put(("10|11"), e14);
+	edgeMap.put(("11|12"), e15);
+	edgeMap.put(("11|13"), e16);
+	edgeMap.put(("2|9" ), e17);
+	edgeMap.put(("9|1" ), e18);
+	edgeMap.put(("4|9" ), e19);
+
+	
+
 
 
 	FlowGraphNode edgeSource1 = v1;
@@ -189,6 +235,52 @@ public class App
 	double oldWeight5 = 1;
 	double newWeight5 = 4;
 
+	FlowGraphNode edgeSource6 = v6;
+	FlowGraphNode edgeTarget6 = v7;
+	double oldWeight6 = 1;
+	double newWeight6 = 12;
+
+	FlowGraphNode edgeSource7 = v6;
+	FlowGraphNode edgeTarget7 = v8;
+	double oldWeight7 = 1;
+	double newWeight7 = 4;
+
+	FlowGraphNode edgeSource8 = v2;
+	FlowGraphNode edgeTarget8 = v10;
+	double oldWeight8 = 1;
+	double newWeight8 = 3;
+
+
+	FlowGraphNode edgeSource9 = v10;
+	FlowGraphNode edgeTarget9 = v11;
+	double oldWeight9 = 1;
+	double newWeight9 = 7;
+
+	FlowGraphNode edgeSource10 = v11;
+	FlowGraphNode edgeTarget10 = v12;
+	double oldWeight10 = 1;
+	double newWeight10 = 16;
+
+	FlowGraphNode edgeSource11 = v11;
+	FlowGraphNode edgeTarget11 = v13;
+	double oldWeight11 = 1;
+	double newWeight11 = 16;
+
+	FlowGraphNode edgeSource12 = v2;
+	FlowGraphNode edgeTarget12 = v9;
+	double oldWeight12 = 1;
+	double newWeight12 = 3;
+
+	FlowGraphNode edgeSource13 = v9;
+	FlowGraphNode edgeTarget13 = v1;
+	double oldWeight13 = 1;
+	double newWeight13 = 7;
+
+	FlowGraphNode edgeSource14 = v4;
+	FlowGraphNode edgeTarget14 = v9;
+	double oldWeight14 = 1;
+	double newWeight14 = 9;
+
 	updateQueue = new LinkedList<>();
 
 	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e1,
@@ -201,35 +293,75 @@ public class App
 						     edgeSource4, edgeTarget4, oldWeight4, newWeight4));
 	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e5,
 						     edgeSource5, edgeTarget5, oldWeight5, newWeight5));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e6,
+						     edgeSource6, edgeTarget6, oldWeight6, newWeight6));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e7,
+						     edgeSource7, edgeTarget7, oldWeight7, newWeight7));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e8,
+						     edgeSource8, edgeTarget8, oldWeight8, newWeight8));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e9,
+						     edgeSource9, edgeTarget9, oldWeight9, newWeight9));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e10,
+						     edgeSource10, edgeTarget10, oldWeight10, newWeight10));
+	
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e11,
+						     edgeSource11, edgeTarget11, oldWeight11, newWeight11));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e12,
+						     edgeSource12, edgeTarget12, oldWeight12, newWeight12));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e13,
+						     edgeSource13, edgeTarget13, oldWeight13, newWeight13));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e14,
+						     edgeSource14, edgeTarget14, oldWeight14, newWeight14));
+
+    }
+
+    private static void init() throws Exception
+    {
+	edgeMap = new HashMap<>();
+
+	initActiveMQConsumer();
+	    /*
+	ConnectionFactory factory = 
+	    new ActiveMQConnectionFactory(); 
+	Connection con = factory.createConnection();
+	try {
+	    Session session = 
+		con.createSession(false, Session.AUTO_ACKNOWLEDGE); 
+	    consumer = session.createConsumer(session.createQueue("SampleQueue"));
+	    con.start();                                            
+	} catch (Exception e) { System.out.println("Failed to connect to ActiveMQ!\n" + e); System.exit(0); }
+
+*/
+	initGraph();
 	
     }
 
     private static FlowGraphEdgeChangeEvent nextUpdate()
     {
 	System.out.println("Requesting a new update from the graph");
-	for(int i = 0; i <= 5; i++){
-	    try {
+	String message = null;
 
+	for(int i = 0; i <= 3; i++){
+	    try {
 		Message msg = consumer.receive();
 		if (! (msg instanceof TextMessage)) {
 		    throw new RuntimeException("Expected a TextMessage");
 		}
-		TextMessage tm = (TextMessage) msg;
-		System.out.println("Delivering: " + tm.getText());		
-		return deserializeFlowGraphEdgeChangeEvent(graph, tm.getText());
+		message = ((TextMessage) msg).getText();
 
 	    } catch (Exception e) {
 		try {
+		    System.out.println(e);
 		    Thread.sleep((int)(1000*Math.pow(2, i)));
 		} catch(Exception e2) {
-		    
+		    System.out.println(e2);
 		}
 	    }
 	}
 
-	System.err.println("Failed to retrieve an update 6 times, Quitting...");
-	System.exit(0);
-	return null;
+	System.out.println("Delivering: " + message);		
+	return deserializeFlowGraphEdgeChangeEvent(graph, message);
+
 	/*counter = (counter+1)%updateQueue.size();
 	
 	FlowGraphEdgeChangeEvent e = updateQueue.get(counter);
@@ -239,15 +371,19 @@ public class App
 
     private static FlowGraphEdgeChangeEvent deserializeFlowGraphEdgeChangeEvent(Graph g, String msg)
     {
+	System.out.println(msg);
 
-	String parts[] = msg.split("|");
+	String parts[] = msg.split("\\|");
 	String edgeSourceString = parts[0];
 	String edgeTargetString = parts[1];
 	String newWeightString = parts[2];
+	System.out.println(Arrays.toString(parts));
 
 	FlowGraphNode edgeSource = new FlowGraphNode(edgeSourceString);
 	FlowGraphNode edgeTarget = new FlowGraphNode(edgeTargetString);
-	FlowGraphEdge e = graph.getEdge(edgeSource, edgeTarget);
+
+	FlowGraphEdge e = edgeMap.get(edgeSourceString + "|" + edgeTargetString);
+	if(e == null) { System.out.println("Could not find message: " + edgeSource + " - " + edgeTarget); return null; }
 	double oldWeight = graph.getEdgeWeight(e);
 	double newWeight = Double.parseDouble(newWeightString);
 
