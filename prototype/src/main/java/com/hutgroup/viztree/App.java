@@ -48,7 +48,11 @@ public class App
 
 	Stream
 	    .iterate(nextUpdate(), prev -> nextUpdate())
-	    .forEach((graphUpdate) -> update(graph, graphUpdate));
+	    .forEach((graphUpdate) -> {
+		     for(FlowGraphEdgeChangeEvent upd : graphUpdate) {
+			 update(graph, graphUpdate);
+		     }
+		});
 	
     }
 
@@ -192,6 +196,9 @@ public class App
 	FlowGraphEdge e19 = graph.addEdge(v4, v9);  
 	graph.setEdgeWeight(e19, 1);
 
+	FlowGraphEdge e20 = graph.addEdge(v3, v11);  
+	graph.setEdgeWeight(e19, 1);
+
 	edgeMap.put(("eq|21"), e1 );
 	edgeMap.put(("21|1" ), e2 );  
 	edgeMap.put(("1|2" ), e3 );
@@ -211,9 +218,7 @@ public class App
 	edgeMap.put(("2|9" ), e17);
 	edgeMap.put(("9|1" ), e18);
 	edgeMap.put(("4|9" ), e19);
-
-	
-
+	edgeMap.put(("3|11"), e20);
 
 
 	FlowGraphNode edgeSource1 = v1;
@@ -347,7 +352,7 @@ public class App
 	
     }
 
-    private static FlowGraphEdgeChangeEvent nextUpdate()
+    private static List<FlowGraphEdgeChangeEvent> nextUpdate()
     {
 	System.out.println("Requesting a new update from the graph");
 	String message = null;
@@ -371,40 +376,106 @@ public class App
 	}
 
 	System.out.println("Delivering: " + message);		
-	return deserializeFlowGraphEdgeChangeEvent(graph, StringUtils::split, message);
+	return deserializeFlowGraphEdgeChangeEvent(graph,
+						   s -> StringUtils.split(s, "\\|"),
+						    message);
 
     }
 
-    private static FlowGraphEdgeChangeEvent deserializeFlowGraphEdgeChangeEvent(Graph g, Function<String, List<String>> deserializer, String msg)
+    private static List<FlowGraphEdgeChangeEvent> deserializeFlowGraphEdgeChangeEvent(Graph g, Function<String, List<String>> deserializer, String msg)
     {
 	System.out.println(msg);
 
-	List<String> parts = deserializer.apply("\\|");
+	List<String> parts = deserializer.apply(msg);
 	String edgeSourceString = parts.get(0);
-	String edgeTargetString = parts.get(1);
-	String newWeightString = parts.get(2);
+	String edgeMidTargetString = parts.get(1);
+	String edgeMidSourceString = parts.get(1);	
+	String edgeTargetString = parts.get(2);
+
 	System.out.println(parts);
 
 	FlowGraphNode edgeSource = new FlowGraphNode(edgeSourceString);
+	FlowGraphNode edgeMidTarget = new FlowGraphNode(edgeMidTargetString);
+	FlowGraphNode edgeMidSource = new FlowGraphNode(edgeMidSourceString);
 	FlowGraphNode edgeTarget = new FlowGraphNode(edgeTargetString);
 
-	FlowGraphEdge e = edgeMap.get(edgeSourceString + "|" + edgeTargetString);
-	if(e == null) { System.out.println("Could not find message: " + edgeSource + " - " + edgeTarget); return null; }
-	double oldWeight = graph.getEdgeWeight(e);
-	double newWeight = Double.parseDouble(newWeightString);
+	FlowGraphEdge e = edgeMap.get(edgeSourceString + "|" + edgeMidTargetString);
+	FlowGraphEdge e2 = edgeMap.get(edgeMidSourceString + "|" + edgeTargetString);	
 
+	if(e == null) { System.out.println("Could not find message: " + edgeSource + " - " + edgeMid); return null; }
 
-	return new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e,
-					    edgeSource, edgeTarget, oldWeight, newWeight);
+	double oldWeight1 = graph.getEdgeWeight(e);
+
+	double oldWeight2 = graph.getEdgeWeight(e2);
+
+	List<FlowGraphEdgeChangeEvent> l = new ArrayList<>();
+
+	l.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e,
+					   edgeSource, edgeMidTarget, oldWeight, oldWeight-1));
+	l.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e,
+					   edgeMidSource, edgeTarget, oldWeight, oldWeight+1));
+
+	return l;
+
     }
 
 
     private static List<String> unmarshallOrderManagerEdgeEvent(String inp)
     {
+	Object o;
 	try { 
-	Object o = jaxbUnmarshaller.unmarshal(new StringReader(inp));
-	} catch(Exception e) { System.out.println("Failed to parse " + inp); }
-	throw new RuntimeException("Unimplemented!");
+	    o = jaxbUnmarshaller.unmarshal(new StringReader(inp));
+	} catch(Exception e) { System.out.println("Failed to parse " + inp); return null; }
+
+	Object caseAnalysis = ((JAXBElement)o).getValue();
+
+	Tuple<String, String> p = orderTracker.get(orderId);
+
+	String newStateTarget;
+
+	if ( caseAnalysis instanceof CancelOrderRequest           ) { newStateTarget = "11"; }
+	if ( caseAnalysis instanceof ChargeInvoiceRequest	  ) { newStateTarget = "2"; }
+	if ( caseAnalysis instanceof CompleteAddress		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof DespatchEvent		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof FraudCheckRequest		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof FraudStatusUpdate		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof FulfilmentRequest		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof FulfilmentRequestLine	  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof InvoiceEvent		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof InvoiceFailureEvent	  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof InvoiceRetryEvent		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof InvoiceStatusUpdate	  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof InvoiceSuccessEvent	  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof Link			  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof Links			  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof Money			  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof NewInvoiceRequest		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof NewOrderRequest		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof ObjectFactory		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof OrderActionRequest		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof OrderEvent			  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof OrderEvents		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof OrderModificationRequest	  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof OrderRequestEvent		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof PayresolveRefulfilmentRequest) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof Price			  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof RefundOrderRequest		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof ReleaseRequest		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof ReplaceOrderRequest	  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof ReservationRequest		  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof ReservationResponse	  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof ResolvePaymentRequest	  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof RetryEvent			  ) { newStateTarget = ""; }
+	if ( caseAnalysis instanceof StockEventRefulfilmentRequest) { newStateTarget = ""; }	
+
+	orderTracker.put(orderId, new Tuple<String, String>(p._2, newState));
+
+	result.add(p._1);
+	result.add(p._2);
+	result.add(p._2);
+	result.add(newStateSource);
+
+	return result;
 	
     }
     

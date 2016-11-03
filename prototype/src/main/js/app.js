@@ -512,8 +512,8 @@ function update () {
 var exampleNodes = [
   {"type":"Order Manager","id":"a","parent":null,"name":"Order Managers"},
   {"type":"Order Manager","id":"1","parent":"a","number":"101","name":"New"},
-  {"type":"Order Manager","id":"2","parent":"a","number":"120","name":"Reserved"},
-  {"type":"Order Manager","id":"3","parent":"a","number":"140","name":"Changed"},
+  {"type":"Order Manager","id":"2","parent":"a","number":"120","name":"Charged"},
+  {"type":"Order Manager","id":"3","parent":"a","number":"140","name":"Reserved"},
   {"type":"Order Manager","id":"4","parent":"a","number":"150","name":"Released"},
   {"type":"Order Manager","id":"5","parent":"a","number":"160","name":"Dispatched"},
   {"type":"Order Manager","id":"6","parent":"a","number":"170","name":"Refund Pending"},
