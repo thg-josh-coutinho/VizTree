@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://xml.thehutgroup.com/orderEvents"
+           xmlns:hctns="http://xml.thehutgroup.com/hypermedia-common-types"
+           xmlns:cns="http://xml.thehutgroup.com/common-types" 
+           xmlns:tns="http://xml.thehutgroup.com/orderEvents"
+           elementFormDefault="qualified">
+
+    <xs:import namespace="http://xml.thehutgroup.com/hypermedia-common-types" schemaLocation="hypermedia-common-types.xsd" />
+    <xs:import namespace="http://xml.thehutgroup.com/common-types" schemaLocation="common-types.xsd" />
+
+
+    <xs:complexType name="orderEvent" abstract="true">
+		<xs:sequence>
+			<xs:element name="link" type="hctns:link" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+			<xs:attribute name="eventId" type="xs:long" use="required"/>
+			<xs:attribute name="eventTime" type="xs:dateTime"  use="required"/>
+			<xs:attribute name="startTime" type="xs:dateTime"  use="optional"/>
+			<xs:attribute name="finishTime" type="xs:dateTime"  use="optional"/>
+			<xs:attribute name="failTime" type="xs:dateTime"  use="optional"/>
+
+			<xs:attribute name="eventType" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="NEW_ORDER_REQUEST" />
+						<xs:enumeration value="CANCEL_ORDER_REQUEST" />
+						<xs:enumeration value="REFUND_ORDER_REQUEST" />
+						<xs:enumeration value="RESOLVE_PAYMENT_REQUEST" />
+						<xs:enumeration value="REPLACE_ORDER_REQUEST" />
+						<xs:enumeration value="NEW_INVOICE_REQUEST" />
+						<xs:enumeration value="CHARGE_INVOICE_REQUEST" />
+						<xs:enumeration value="INVOICE_STATUS_UPDATE" />
+						<xs:enumeration value="INVOICE_SUCCESS" />
+						<xs:enumeration value="INVOICE_FAILURE" />
+						<xs:enumeration value="INVOICE_RETRY" />
+						<xs:enumeration value="RESERVATION_REQUEST" />
+						<xs:enumeration value="RESERVATION_RESPONSE" />
+						<xs:enumeration value="REFULFILMENT_REQUEST" />
+						<xs:enumeration value="RETRY" />
+						<xs:enumeration value="FRAUD_STATUS_UPDATE" />
+						<xs:enumeration value="FRAUD_CHECK_REQUEST" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="orderRequestEvent" abstract="true">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderEvent"/>
+    	</xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="orderActionRequest" abstract="true">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderRequestEvent">
+    			<xs:sequence>
+					<xs:element name="orderNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+
+	<xs:element name="despatchEvent" type="tns:despatchEvent"/>
+	<xs:complexType name="despatchEvent">
+		<xs:complexContent>
+			<xs:extension base="tns:orderActionRequest">
+				<xs:sequence>
+					<xs:element name="shipmentLink" type="hctns:link" minOccurs="0" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="retryEvent" type="tns:retryEvent"/>
+    <xs:complexType name="retryEvent">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderEvent">
+    			<xs:sequence>
+					<xs:element name="retry" type="tns:orderEvent" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+
+	<xs:element name="newOrderRequest" type="tns:newOrderRequest"/>
+    <xs:complexType name="newOrderRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderActionRequest">
+				<xs:sequence>
+					<xs:element name="orderLink" type="hctns:link" minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+	
+	<xs:element name="fraudStatusUpdate" type="tns:fraudStatusUpdate"/>
+    <xs:complexType name="fraudStatusUpdate">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderActionRequest"/>
+    	</xs:complexContent>
+    </xs:complexType>
+	
+	<xs:element name="fraudCheckRequest" type="tns:fraudCheckRequest"/>
+    <xs:complexType name="fraudCheckRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderActionRequest"/>			
+    	</xs:complexContent>		
+    </xs:complexType>
+    
+    <xs:complexType name="fulfilmentRequestLine">
+		<xs:attribute name="productId" type="xs:int" use="required"/>
+		<xs:attribute name="quantity" type="xs:int" use="required"/>
+	</xs:complexType>
+
+    <xs:complexType name="fulfilmentRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderActionRequest">
+    			<xs:sequence>
+         			<xs:element name="fulfilmentRequestLine" type="tns:fulfilmentRequestLine" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+    	</xs:complexContent>	
+	</xs:complexType>
+    
+    <xs:complexType name="invoiceEvent" abstract="true">
+    	<xs:complexContent>
+    		<xs:extension base="tns:fulfilmentRequest">
+				<xs:sequence>
+					<xs:element name="invoiceLink" type="hctns:link" minOccurs="0" maxOccurs="1" />
+				</xs:sequence>
+ 			</xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+
+	<xs:element name="newInvoiceRequest" type="tns:newInvoiceRequest"/>
+    <xs:complexType name="newInvoiceRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:invoiceEvent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="chargeInvoiceRequest" type="tns:chargeInvoiceRequest"/>
+    <xs:complexType name="chargeInvoiceRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:invoiceEvent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="invoiceStatusUpdate" type="tns:invoiceStatusUpdate"/>
+    <xs:complexType name="invoiceStatusUpdate">
+    	<xs:complexContent>
+    		<xs:extension base="tns:invoiceEvent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="invoiceSuccessEvent" type="tns:invoiceSuccessEvent"/>
+    <xs:complexType name="invoiceSuccessEvent">
+    	<xs:complexContent>
+    		<xs:extension base="tns:invoiceEvent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="invoiceFailureEvent" type="tns:invoiceFailureEvent"/>
+    <xs:complexType name="invoiceFailureEvent">
+    	<xs:complexContent>
+    		<xs:extension base="tns:invoiceEvent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="invoiceRetryEvent" type="tns:invoiceRetryEvent"/>
+    <xs:complexType name="invoiceRetryEvent">
+    	<xs:complexContent>
+    		<xs:extension base="tns:invoiceEvent"/>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="reservationRequest" type="tns:reservationRequest"/>
+    <xs:complexType name="reservationRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:invoiceEvent">
+    			<xs:sequence>
+					<xs:element name="reservationReference" type="xs:string" minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+    		</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="reservationResponse" type="tns:reservationResponse"/>
+    <xs:complexType name="reservationResponse">
+    	<xs:complexContent>
+    		<xs:extension base="tns:invoiceEvent">
+				<xs:sequence>
+					<xs:element name="reservationReference" type="xs:string" minOccurs="1" maxOccurs="1" />
+					<xs:element name="shipmentLink" type="hctns:link" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+ 			</xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+
+	<xs:element name="releaseRequest" type="tns:releaseRequest"/>
+    <xs:complexType name="releaseRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:fulfilmentRequest">
+				<xs:sequence>
+					<xs:element name="shipmentLink" type="hctns:link" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+ 			</xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+
+	<xs:element name="payresolveRefulfilmentRequest" type="tns:payresolveRefulfilmentRequest"/>
+	<xs:complexType name="payresolveRefulfilmentRequest">
+		<xs:complexContent>
+			<xs:extension base="tns:fulfilmentRequest"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="stockEventRefulfilmentRequest" type="tns:stockEventRefulfilmentRequest"/>
+	<xs:complexType name="stockEventRefulfilmentRequest">
+		<xs:complexContent>
+			<xs:extension base="tns:fulfilmentRequest"/>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+    <xs:complexType name="orderModificationRequest" abstract="true">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderActionRequest">
+				<xs:sequence>
+					<xs:element name="actionType" type="xs:string" minOccurs="1" maxOccurs="1" />
+					<xs:element name="actionRequestLine" type="tns:actionRequestLine" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+
+	<xs:element name="cancelOrderRequest" type="tns:cancelOrderRequest"/>
+    <xs:complexType name="cancelOrderRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderModificationRequest">
+				<xs:sequence>
+					<xs:element name="cancelType" minOccurs="1" maxOccurs="1">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="MANUAL" />
+								<xs:enumeration value="AUTOMATIC" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+    	</xs:complexContent>	
+	</xs:complexType>
+
+	<xs:element name="refundOrderRequest" type="tns:refundOrderRequest"/>
+    <xs:complexType name="refundOrderRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderModificationRequest">
+				<xs:sequence>
+					<xs:element name="refundShipping" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+    	</xs:complexContent>	
+	</xs:complexType>
+
+	<xs:element name="resolvePaymentRequest" type="tns:resolvePaymentRequest"/>
+    <xs:complexType name="resolvePaymentRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderModificationRequest">
+			</xs:extension>
+    	</xs:complexContent>	
+	</xs:complexType>
+
+	<xs:element name="replaceOrderRequest" type="tns:replaceOrderRequest"/>
+    <xs:complexType name="replaceOrderRequest">
+    	<xs:complexContent>
+    		<xs:extension base="tns:orderModificationRequest">
+			</xs:extension>
+    	</xs:complexContent>	
+	</xs:complexType>
+
+    <xs:complexType name="actionRequestLine">
+		<xs:attribute name="productId" type="xs:int" use="required"/>
+		<xs:attribute name="quantity" type="xs:int" use="required"/>
+		<xs:attribute name="sourceReference" type="xs:int" use="required"/>		
+	</xs:complexType>
+
+	
+ 	<xs:element name="orderEvents">
+  	<xs:complexType>
+    	<xs:sequence>
+         	<xs:element name="orderNumber" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="eventDetail" type="tns:orderEvent" minOccurs="0" maxOccurs="unbounded"/>
+     	</xs:sequence>
+ 	</xs:complexType>
+ 	</xs:element>
+ 	
+</xs:schema>

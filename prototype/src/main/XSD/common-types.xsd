@@ -1,0 +1,54 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://xml.thehutgroup.com/common-types" targetNamespace="http://xml.thehutgroup.com/common-types" elementFormDefault="qualified">
+<xs:simpleType name="ISOCurrency">
+<xs:restriction base="xs:string">
+<xs:pattern value="[A-Z]{3}"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="Value">
+<xs:restriction base="xs:decimal">
+<xs:fractionDigits value="4"/>
+<xs:totalDigits value="16"/>
+<!--
+ this gives a maximum charge of 999,999,999,999.9999 
+-->
+</xs:restriction>
+</xs:simpleType>
+<xs:complexType name="Money">
+<xs:simpleContent>
+<xs:extension base="tns:Value">
+<xs:attribute name="currency" type="tns:ISOCurrency" use="required"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:complexType name="Price">
+<xs:sequence>
+<xs:element name="money" minOccurs="1" maxOccurs="unbounded" type="tns:Money"/>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="price" type="tns:Price"/>
+<xs:complexType name="completeAddress">
+<xs:sequence>
+<xs:element name="organisationName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+<xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+<xs:element name="houseNumberName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+<xs:element name="addressLine1" type="xs:string" minOccurs="1" maxOccurs="1"/>
+<xs:element name="addressLine2" type="xs:string" minOccurs="0" maxOccurs="1"/>
+<xs:element name="addressLine3" type="xs:string" minOccurs="0" maxOccurs="1"/>
+<xs:element name="addressLine4" type="xs:string" minOccurs="0" maxOccurs="1"/>
+<xs:element name="postCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+<xs:element name="countryCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+<xs:element name="email" type="xs:string" minOccurs="0" maxOccurs="1"/>
+<xs:element name="telephoneNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+<xs:element name="mobileNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+<!--
+
+
+<price>
+	<money currency="GBP">12.99</money>
+	<money currency="EUR">15.99</money>
+</price>
+
+-->

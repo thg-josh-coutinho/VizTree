@@ -8,12 +8,16 @@ import javax.jms.MessageConsumer;
 import javax.jms.TextMessage;
 import javax.jms.Session;
 
+import javax.xml.bind.*;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import java.util.LinkedList;
-import java.util.Scanner;
 import java.util.stream.*;
 import java.util.function.*;
+import java.util.*;
+
+import java.io.StringReader; 
+
 import com.hutgroup.viztree.graph.FlowGraphListener;
 import org.jgrapht.event.FlowGraphEdgeChangeEvent;
 import org.jgrapht.graph.FlowGraphEdge;
@@ -21,9 +25,10 @@ import org.jgrapht.graph.FlowGraphNode;
 import org.jgrapht.graph.FlowGraph;
 import org.jgrapht.Graph;
 
+import com.hutgroup.viztree.orderevents.*;
+
 import com.josh.utils.Tuple;
 import com.josh.utils.StringUtils;
-import java.util.*;
 
 public class App
 {
@@ -32,6 +37,7 @@ public class App
     static FlowGraph graph;
     static MessageConsumer consumer;
     static Map<String, FlowGraphEdge> edgeMap;
+    static Unmarshaller jaxbUnmarshaller;
     public static void main( String[] args ) throws Exception
     {
 	Scanner sc = new Scanner(System.in);
@@ -315,6 +321,20 @@ public class App
 
     }
 
+    private static void initUnmarshaller()
+    {
+	String packageNames = "com.hutgroup.vitree.orderevents";
+	try {
+	    JAXBContext jaxbContext = JAXBContext.newInstance(packageNames);  
+	    jaxbUnmarshaller = jaxbContext.createUnmarshaller(); 
+	} catch(Exception e)
+	    {
+		System.err.println("Could not create the unmarshaller, exiting");
+		System.exit(1);
+	    }
+    }
+
+
     private static void init() throws Exception
     {
 	edgeMap = new HashMap<>();
@@ -322,6 +342,8 @@ public class App
 	initActiveMQConsumer();
 
 	initGraph();
+
+	initUnmarshaller();
 	
     }
 
@@ -366,7 +388,7 @@ public class App
 	FlowGraphNode edgeSource = new FlowGraphNode(edgeSourceString);
 	FlowGraphNode edgeTarget = new FlowGraphNode(edgeTargetString);
 
-	FlowGraphEdge e = (FlowGraphEdge)g.getEdge(edgeSource, edgeTarget);
+	FlowGraphEdge e = edgeMap.get(edgeSourceString + "|" + edgeTargetString);
 	if(e == null) { System.out.println("Could not find message: " + edgeSource + " - " + edgeTarget); return null; }
 	double oldWeight = graph.getEdgeWeight(e);
 	double newWeight = Double.parseDouble(newWeightString);
@@ -375,6 +397,20 @@ public class App
 	return new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e,
 					    edgeSource, edgeTarget, oldWeight, newWeight);
     }
+
+
+    private static List<String> unmarshallOrderManagerEdgeEvent(String inp)
+    {
+	try { 
+	Object o = jaxbUnmarshaller.unmarshal(new StringReader(inp));
+	} catch(Exception e) { System.out.println("Failed to parse " + inp); }
+	throw new RuntimeException("Unimplemented!");
+	
+    }
+    
+
+
+
     
     private static String[] getFlowGraphArgs(String []args)
     {
