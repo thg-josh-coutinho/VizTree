@@ -22,6 +22,7 @@ import org.jgrapht.graph.FlowGraph;
 import org.jgrapht.Graph;
 
 import com.josh.utils.Tuple;
+import com.josh.utils.StringUtils;
 import java.util.*;
 
 public class App
@@ -79,10 +80,10 @@ public class App
 		TextMessage textMessage = (TextMessage) message;
 		String text = textMessage.getText();
 		System.out.println("Received: " + text);
-	    } else {
-		System.out.println("Received: " + message);
 	    }
-	} catch(Exception e) {
+	    else { System.out.println("Received: " + message); }
+	}
+	catch(Exception e) {
 	    System.out.println("Could not connect to activemq");
 	    System.exit(1);
 	}
@@ -348,29 +349,24 @@ public class App
 	}
 
 	System.out.println("Delivering: " + message);		
-	return deserializeFlowGraphEdgeChangeEvent(graph, message);
+	return deserializeFlowGraphEdgeChangeEvent(graph, StringUtils::split, message);
 
-	/*counter = (counter+1)%updateQueue.size();
-	
-	FlowGraphEdgeChangeEvent e = updateQueue.get(counter);
-	e.setNewWeight(Math.random()*30);
-	return e;*/
     }
 
-    private static FlowGraphEdgeChangeEvent deserializeFlowGraphEdgeChangeEvent(Graph g, String msg)
+    private static FlowGraphEdgeChangeEvent deserializeFlowGraphEdgeChangeEvent(Graph g, Function<String, List<String>> deserializer, String msg)
     {
 	System.out.println(msg);
 
-	String parts[] = msg.split("\\|");
-	String edgeSourceString = parts[0];
-	String edgeTargetString = parts[1];
-	String newWeightString = parts[2];
-	System.out.println(Arrays.toString(parts));
+	List<String> parts = deserializer.apply("\\|");
+	String edgeSourceString = parts.get(0);
+	String edgeTargetString = parts.get(1);
+	String newWeightString = parts.get(2);
+	System.out.println(parts);
 
 	FlowGraphNode edgeSource = new FlowGraphNode(edgeSourceString);
 	FlowGraphNode edgeTarget = new FlowGraphNode(edgeTargetString);
 
-	FlowGraphEdge e = edgeMap.get(edgeSourceString + "|" + edgeTargetString);
+	FlowGraphEdge e = (FlowGraphEdge)g.getEdge(edgeSource, edgeTarget);
 	if(e == null) { System.out.println("Could not find message: " + edgeSource + " - " + edgeTarget); return null; }
 	double oldWeight = graph.getEdgeWeight(e);
 	double newWeight = Double.parseDouble(newWeightString);
