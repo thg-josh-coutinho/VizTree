@@ -161,10 +161,14 @@ public class App
 	graph.setEdgeWeight(e5, 1);	            
 	FlowGraphEdge e6 = graph.addEdge (v3, v14); 
 	graph.setEdgeWeight(e6, 1);	            
+	FlowGraphEdge e6a = graph.addEdge (v3, v4); 
+	graph.setEdgeWeight(e6a, 1);	            
 	FlowGraphEdge e7 = graph.addEdge (v14, v4); 
 	graph.setEdgeWeight(e7, 1);	            
 	FlowGraphEdge e8 = graph.addEdge (v4, v22); 
 	graph.setEdgeWeight(e8, 1);	            
+	FlowGraphEdge e8a = graph.addEdge (v4, v5); 
+	graph.setEdgeWeight(e8a, 1);	            
 	FlowGraphEdge e9 = graph.addEdge (v22, v5); 
 	graph.setEdgeWeight(e9, 1);	            
 	FlowGraphEdge e10 = graph.addEdge(v5, v6);  
@@ -175,7 +179,7 @@ public class App
 	FlowGraphEdge e12 = graph.addEdge(v6, v8);  
 	graph.setEdgeWeight(e12, 1);	            
 					            
-	FlowGraphEdge e13 = graph.addEdge(v2, v10); 
+	FlowGraphEdge e13 = graph.addEdge(v1, v10); 
 	graph.setEdgeWeight(e13, 1);	            
 					            
 	FlowGraphEdge e14 = graph.addEdge(v10, v11);
@@ -187,16 +191,19 @@ public class App
 	FlowGraphEdge e16 = graph.addEdge(v11, v13);
 	graph.setEdgeWeight(e16, 1);	            
 					            
-	FlowGraphEdge e17 = graph.addEdge(v2, v9);  
+	FlowGraphEdge e17 = graph.addEdge(v4, v9);  
 	graph.setEdgeWeight(e17, 1);	            
 					            
-	FlowGraphEdge e18 = graph.addEdge(v1, v9);  
+	FlowGraphEdge e18 = graph.addEdge(v9, v2);  
 	graph.setEdgeWeight(e18, 1);	            
 					            
-	FlowGraphEdge e19 = graph.addEdge(v4, v9);  
+	FlowGraphEdge e19 = graph.addEdge(v2, v11);  
 	graph.setEdgeWeight(e19, 1);
 
-	FlowGraphEdge e20 = graph.addEdge(v3, v11);  
+	FlowGraphEdge e20 = graph.addEdge(v10, v1);  
+	graph.setEdgeWeight(e19, 1);
+
+	FlowGraphEdge e21 = graph.addEdge(v1, v11);  
 	graph.setEdgeWeight(e19, 1);
 
 	edgeMap.put(("eq|21"), e1 );
@@ -207,18 +214,20 @@ public class App
 	edgeMap.put(("3|14"), e6 );
 	edgeMap.put(("14|4" ), e7 );  
 	edgeMap.put(("4|22"), e8 );
-	edgeMap.put(("225" ), e9 ); 
+	edgeMap.put(("3|4"), e6a );
+	edgeMap.put(("4|5"), e8a );
 	edgeMap.put(("5|6" ), e10);
 	edgeMap.put(("6|7" ), e11);
 	edgeMap.put(("6|8" ), e12);
-	edgeMap.put(("2|10"), e13);
+	edgeMap.put(("1|10"), e13);
 	edgeMap.put(("10|11"), e14);
 	edgeMap.put(("11|12"), e15);
 	edgeMap.put(("11|13"), e16);
-	edgeMap.put(("2|9" ), e17);
-	edgeMap.put(("9|1" ), e18);
-	edgeMap.put(("4|9" ), e19);
-	edgeMap.put(("3|11"), e20);
+	edgeMap.put(("4|9" ), e17);
+	edgeMap.put(("9|2" ), e18);
+	edgeMap.put(("2|11" ), e19);
+	edgeMap.put(("10|1"), e20);
+	edgeMap.put(("1|11"), e21);	
 
 
 	FlowGraphNode edgeSource1 = v1;
