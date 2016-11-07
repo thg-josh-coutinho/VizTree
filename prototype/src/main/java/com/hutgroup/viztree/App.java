@@ -38,6 +38,9 @@ public class App
     static MessageConsumer consumer;
     static Map<String, FlowGraphEdge> edgeMap;
     static Unmarshaller jaxbUnmarshaller;
+
+    static Map<String, Tuple<String, String>> orderTracker;
+
     public static void main( String[] args ) throws Exception
     {
 	Scanner sc = new Scanner(System.in);
@@ -50,7 +53,7 @@ public class App
 	    .iterate(nextUpdate(), prev -> nextUpdate())
 	    .forEach((graphUpdate) -> {
 		     for(FlowGraphEdgeChangeEvent upd : graphUpdate) {
-			 update(graph, graphUpdate);
+			 update(graph, upd);
 		     }
 		});
 	
@@ -102,6 +105,9 @@ public class App
 
     private static void initGraph()
     {
+
+	orderTracker = new HashMap<String, Tuple<String, String>>();
+
 	graph = new FlowGraph();
 	graph.addGraphListener(new FlowGraphListener());
 	FlowGraphNode va  = new FlowGraphNode("a");
@@ -393,6 +399,7 @@ public class App
 
     private static List<FlowGraphEdgeChangeEvent> deserializeFlowGraphEdgeChangeEvent(Graph g, Function<String, List<String>> deserializer, String msg)
     {
+
 	System.out.println(msg);
 
 	List<String> parts = deserializer.apply(msg);
@@ -411,18 +418,19 @@ public class App
 	FlowGraphEdge e = edgeMap.get(edgeSourceString + "|" + edgeMidTargetString);
 	FlowGraphEdge e2 = edgeMap.get(edgeMidSourceString + "|" + edgeTargetString);	
 
-	if(e == null) { System.out.println("Could not find message: " + edgeSource + " - " + edgeMid); return null; }
+	if(e == null) { System.out.println("Could not find message: " + edgeSource + " - " + edgeMidTarget); return null; }
 
 	double oldWeight1 = graph.getEdgeWeight(e);
 
 	double oldWeight2 = graph.getEdgeWeight(e2);
 
+
 	List<FlowGraphEdgeChangeEvent> l = new ArrayList<>();
 
 	l.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e,
-					   edgeSource, edgeMidTarget, oldWeight, oldWeight-1));
+					   edgeSource, edgeMidTarget, oldWeight1, oldWeight1-1));
 	l.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e,
-					   edgeMidSource, edgeTarget, oldWeight, oldWeight+1));
+					   edgeMidSource, edgeTarget, oldWeight2, oldWeight2+1));
 
 	return l;
 
@@ -431,61 +439,55 @@ public class App
 
     private static List<String> unmarshallOrderManagerEdgeEvent(String inp)
     {
+
 	Object o;
+
 	try { 
 	    o = jaxbUnmarshaller.unmarshal(new StringReader(inp));
 	} catch(Exception e) { System.out.println("Failed to parse " + inp); return null; }
 
 	Object caseAnalysis = ((JAXBElement)o).getValue();
 
+	String newStateTarget;
+	String orderId;
+	// Same events correspond to different edges
+	if ( caseAnalysis instanceof CancelOrderRequest           ) { orderId = ((CancelOrderRequest           ) caseAnalysis).getLink().getHref(); newStateTarget = "11"; }
+	if ( caseAnalysis instanceof ChargeInvoiceRequest	  ) { orderId = ((ChargeInvoiceRequest	   ) caseAnalysis).getLink().getHref(); newStateTarget = "2";  }
+	if ( caseAnalysis instanceof DespatchEvent		  ) { orderId = ((DespatchEvent		   ) caseAnalysis).getLink().getHref(); newStateTarget = "5";  }
+	if ( caseAnalysis instanceof FraudCheckRequest		  ) { orderId = ((FraudCheckRequest		   ) caseAnalysis).getLink().getHref(); newStateTarget = "3";  }
+	if ( caseAnalysis instanceof FraudStatusUpdate		  ) { orderId = ((FraudStatusUpdate		   ) caseAnalysis).getLink().getHref(); newStateTarget = "3";  }
+	if ( caseAnalysis instanceof FulfilmentRequest		  ) { orderId = ((FulfilmentRequest		   ) caseAnalysis).getLink().getHref(); newStateTarget = "3";  }
+	if ( caseAnalysis instanceof InvoiceFailureEvent	  ) { orderId = ((InvoiceFailureEvent	   ) caseAnalysis).getLink().getHref(); newStateTarget = "8";  }
+	if ( caseAnalysis instanceof InvoiceRetryEvent		  ) { orderId = ((InvoiceRetryEvent		   ) caseAnalysis).getLink().getHref(); newStateTarget = "8";  }
+	if ( caseAnalysis instanceof InvoiceSuccessEvent	  ) { orderId = ((InvoiceSuccessEvent	   ) caseAnalysis).getLink().getHref(); newStateTarget = "7";  }
+	if ( caseAnalysis instanceof NewInvoiceRequest		  ) { orderId = ((NewInvoiceRequest		   ) caseAnalysis).getLink().getHref(); newStateTarget = "2";  }
+	if ( caseAnalysis instanceof NewOrderRequest		  ) { orderId = ((NewOrderRequest		   ) caseAnalysis).getLink().getHref(); newStateTarget = "1";  }
+	if ( caseAnalysis instanceof PayresolveRefulfilmentRequest) { orderId = ((PayresolveRefulfilmentRequest) caseAnalysis).getLink().getHref(); newStateTarget = "1";  }
+	if ( caseAnalysis instanceof RefundOrderRequest		  ) { orderId = ((RefundOrderRequest	   ) caseAnalysis).getLink().getHref(); newStateTarget = "6";  }
+	if ( caseAnalysis instanceof ReleaseRequest		  ) { orderId = ((ReleaseRequest		   ) caseAnalysis).getLink().getHref(); newStateTarget = "4";  }
+	if ( caseAnalysis instanceof ReplaceOrderRequest	  ) { orderId = ((ReplaceOrderRequest	   ) caseAnalysis).getLink().getHref(); newStateTarget = "1";  }
+	if ( caseAnalysis instanceof ReservationRequest		  ) { orderId = ((ReservationRequest	   ) caseAnalysis).getLink().getHref(); newStateTarget = "3";  }
+	else                                                        {  orderId = null; newStateTarget = "12"; }
+	
 	Tuple<String, String> p = orderTracker.get(orderId);
 
-	String newStateTarget;
+	if(p == null)
+        {
+		p = new Tuple<String, String>("1", "1");
+		orderTracker.put(orderId, p);
+        }
 
-	if ( caseAnalysis instanceof CancelOrderRequest           ) { newStateTarget = "11"; }
-	if ( caseAnalysis instanceof ChargeInvoiceRequest	  ) { newStateTarget = "2"; }
-	if ( caseAnalysis instanceof CompleteAddress		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof DespatchEvent		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof FraudCheckRequest		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof FraudStatusUpdate		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof FulfilmentRequest		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof FulfilmentRequestLine	  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof InvoiceEvent		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof InvoiceFailureEvent	  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof InvoiceRetryEvent		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof InvoiceStatusUpdate	  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof InvoiceSuccessEvent	  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof Link			  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof Links			  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof Money			  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof NewInvoiceRequest		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof NewOrderRequest		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof ObjectFactory		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof OrderActionRequest		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof OrderEvent			  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof OrderEvents		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof OrderModificationRequest	  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof OrderRequestEvent		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof PayresolveRefulfilmentRequest) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof Price			  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof RefundOrderRequest		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof ReleaseRequest		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof ReplaceOrderRequest	  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof ReservationRequest		  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof ReservationResponse	  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof ResolvePaymentRequest	  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof RetryEvent			  ) { newStateTarget = ""; }
-	if ( caseAnalysis instanceof StockEventRefulfilmentRequest) { newStateTarget = ""; }	
+	orderTracker.put(orderId, new Tuple<String, String>(p._2, newStateTarget));
 
-	orderTracker.put(orderId, new Tuple<String, String>(p._2, newState));
+	List<String> result = new LinkedList<String>();
 
 	result.add(p._1);
 	result.add(p._2);
 	result.add(p._2);
-	result.add(newStateSource);
+	result.add(newStateTarget);
 
 	return result;
-	
+
     }
     
 

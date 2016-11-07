@@ -1,14 +1,16 @@
-* Need to add data-sources to the activemq
-* Correct the edges to display the flow through the system
-* Should flag as red only when the flow is below a threshold
-* Add active mq to the mix
+* How do you create sample active mq messages
+* Construct a testing plan and document it
+.. Startup activemq
+.. Check status of the queue,
+. , If it has some messages starve it
+.. Start up the webserver in the js directory
+.. Start up the socket io server
+.. Press enter to 
 
-* Fade out background nodes when considering one subgraph
-
-* Need to have all of them with the same original opacity
-* Need to add a proper graph
 * Need a way to configure arbitrary graphs
 * Need to generalize input sources
-* Why does it not go back to blue when the thickness shrinks to less than 10
 * Why does it get highlighted to red even though the thickness is not above the default thickness
+* Accept the queue name that we are going to use as a parameter
+  
+* Need to add tickets to the board specifying what I am currently working on
 
