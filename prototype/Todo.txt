@@ -1,4 +1,14 @@
 * How do you create sample active mq messages
+.. Use the link to generate a bunch of sample active mq messages
+. , Use curl to request the pages
+.  . Store the pages in the activemq/resources/orderevents/ directory
+. , If that fails use haskell to make the get requests
+.. Then purge active mq
+.. post each of those messages using the producer to the active mq
+. , generate the strings by reading the files in .. .. /resources/orderevents/directory
+.. Check that the messages have made it to active mq
+.. Then run the prototype
+.. Connect to the database to generate a bunch of sample events
 * Construct a testing plan and document it
 .. Startup activemq
 .. Check status of the queue,
@@ -14,3 +24,5 @@
   
 * Need to add tickets to the board specifying what I am currently working on
 
+* How do you access resources from within a maven application
+* Move the XSD stuff in the resources

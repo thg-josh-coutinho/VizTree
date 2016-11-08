@@ -343,12 +343,13 @@ public class App
 
     private static void initUnmarshaller()
     {
-	String packageNames = "com.hutgroup.vitree.orderevents";
+	String packageNames = "com.hutgroup.viztree.orderevents";
 	try {
 	    JAXBContext jaxbContext = JAXBContext.newInstance(packageNames);  
 	    jaxbUnmarshaller = jaxbContext.createUnmarshaller(); 
 	} catch(Exception e)
 	    {
+		e.printStackTrace();
 		System.err.println("Could not create the unmarshaller, exiting");
 		System.exit(1);
 	    }
@@ -392,7 +393,7 @@ public class App
 
 	System.out.println("Delivering: " + message);		
 	return deserializeFlowGraphEdgeChangeEvent(graph,
-						   s -> StringUtils.split(s, "\\|"),
+						   App::unmarshallOrderManagerEdgeEvent,
 						    message);
 
     }
@@ -461,7 +462,10 @@ public class App
 	if ( caseAnalysis instanceof InvoiceRetryEvent		  ) { orderId = ((InvoiceRetryEvent		   ) caseAnalysis).getLink().getHref(); newStateTarget = "8";  }
 	if ( caseAnalysis instanceof InvoiceSuccessEvent	  ) { orderId = ((InvoiceSuccessEvent	   ) caseAnalysis).getLink().getHref(); newStateTarget = "7";  }
 	if ( caseAnalysis instanceof NewInvoiceRequest		  ) { orderId = ((NewInvoiceRequest		   ) caseAnalysis).getLink().getHref(); newStateTarget = "2";  }
-	if ( caseAnalysis instanceof NewOrderRequest		  ) { orderId = ((NewOrderRequest		   ) caseAnalysis).getLink().getHref(); newStateTarget = "1";  }
+	if ( caseAnalysis instanceof NewOrderRequest		  ) { orderId = ((NewOrderRequest		   ) caseAnalysis).
+		getLink().
+		getHref();
+	    newStateTarget = "2";  }
 	if ( caseAnalysis instanceof PayresolveRefulfilmentRequest) { orderId = ((PayresolveRefulfilmentRequest) caseAnalysis).getLink().getHref(); newStateTarget = "1";  }
 	if ( caseAnalysis instanceof RefundOrderRequest		  ) { orderId = ((RefundOrderRequest	   ) caseAnalysis).getLink().getHref(); newStateTarget = "6";  }
 	if ( caseAnalysis instanceof ReleaseRequest		  ) { orderId = ((ReleaseRequest		   ) caseAnalysis).getLink().getHref(); newStateTarget = "4";  }
