@@ -3,6 +3,9 @@ package com.hutgroup.viztree;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 /**
  * Unit test for simple App.
@@ -32,13 +35,51 @@ public class AppTest
     {
 	Scanner sc = new Scanner(System.in);
 
-	App app = new App(initActiveMQConsumer(), initGraph(), initUnmarshaller());
+	App app = new App(mockStream(), initGraph(), initUnmarshaller());
 	sc.next();
 
 	app.runApp();
     }
 
 
+    private static Stream<List<FlowGraphEdgeChangeEvent>> mockStream()
+    {
+	
+
+	List<FlowGraphEdgeChangeEvent> updateQueue = new LinkedList<>();
+
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e1,
+						     edgeSource1, edgeTarget1, oldWeight1, newWeight1));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e2,
+						     edgeSource2, edgeTarget2, oldWeight2, newWeight2));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e3,
+						     edgeSource3, edgeTarget3, oldWeight3, newWeight3));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e4,
+						     edgeSource4, edgeTarget4, oldWeight4, newWeight4));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e5,
+						     edgeSource5, edgeTarget5, oldWeight5, newWeight5));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e6,
+						     edgeSource6, edgeTarget6, oldWeight6, newWeight6));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e7,
+						     edgeSource7, edgeTarget7, oldWeight7, newWeight7));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e8,
+						     edgeSource8, edgeTarget8, oldWeight8, newWeight8));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e9,
+						     edgeSource9, edgeTarget9, oldWeight9, newWeight9));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e10,
+						     edgeSource10, edgeTarget10, oldWeight10, newWeight10));
+	
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e11,
+						     edgeSource11, edgeTarget11, oldWeight11, newWeight11));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e12,
+						     edgeSource12, edgeTarget12, oldWeight12, newWeight12));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e13,
+						     edgeSource13, edgeTarget13, oldWeight13, newWeight13));
+	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e14,
+						     edgeSource14, edgeTarget14, oldWeight14, newWeight14));
+
+	return (new MockMessageConsumer(messageList)).stream();
+    }
 
     private static MessageConsumer initActiveMQConsumer()
     {
@@ -60,6 +101,32 @@ public class AppTest
 	}
 
     }
+
+    private static class MockStream {
+	int counter;
+	List<FlowGraphEdgeChangeEvent> messages;
+
+	public MockMessageConsumer(List<FlowGraphEdgeChangeEvent> l){
+	    this.messages = l;
+	}
+
+	private List<FlowGraphEdgeChangeEvent> nextUpdate()
+	{
+	    FlowGraphEdgeChangeEvent e = nextUpdate();
+	    List<FlowGraphEdgeChangeEvent> event = new LinkedList<>();
+	    event.add(messages.get((counter++)%messages.size()));
+	    return event;
+	}
+
+	public Stream<List<FlowGraphEdgeChangeEvent>> stream() {
+	    
+	    return Stream.iterate(nextUpdate(),
+				  prev -> nextUpdate());
+	}
+	
+
+    }
+
 
     private static FlowGraph initGraph()
     {
@@ -262,38 +329,6 @@ public class AppTest
 	FlowGraphNode edgeTarget14 = v9;
 	double oldWeight14 = 1;
 	double newWeight14 = 9;
-
-	updateQueue = new LinkedList<>();
-
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e1,
-						     edgeSource1, edgeTarget1, oldWeight1, newWeight1));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e2,
-						     edgeSource2, edgeTarget2, oldWeight2, newWeight2));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e3,
-						     edgeSource3, edgeTarget3, oldWeight3, newWeight3));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e4,
-						     edgeSource4, edgeTarget4, oldWeight4, newWeight4));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e5,
-						     edgeSource5, edgeTarget5, oldWeight5, newWeight5));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e6,
-						     edgeSource6, edgeTarget6, oldWeight6, newWeight6));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e7,
-						     edgeSource7, edgeTarget7, oldWeight7, newWeight7));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e8,
-						     edgeSource8, edgeTarget8, oldWeight8, newWeight8));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e9,
-						     edgeSource9, edgeTarget9, oldWeight9, newWeight9));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e10,
-						     edgeSource10, edgeTarget10, oldWeight10, newWeight10));
-	
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e11,
-						     edgeSource11, edgeTarget11, oldWeight11, newWeight11));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e12,
-						     edgeSource12, edgeTarget12, oldWeight12, newWeight12));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e13,
-						     edgeSource13, edgeTarget13, oldWeight13, newWeight13));
-	updateQueue.add(new FlowGraphEdgeChangeEvent(graph, FlowGraphEdgeChangeEvent.EDGE_WEIGHT_CHANGE, e14,
-						     edgeSource14, edgeTarget14, oldWeight14, newWeight14));
 
 
 	return graph;
