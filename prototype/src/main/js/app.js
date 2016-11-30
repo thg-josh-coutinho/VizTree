@@ -590,7 +590,7 @@ if (!String.prototype.format) {
 
 
 var socket =  io.connect('http://localhost:9092');
-socket.on('chatevent', function(data) {
+socket.on('flowevent', function(data) {
     console.log("Recieved a chat event from the server:");
     console.log(data);
     var linkL = svg.select("#links").selectAll("path.link")

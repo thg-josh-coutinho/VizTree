@@ -1,15 +1,15 @@
 package com.hutgroup.viztree;
 
-public class ChatObject {
+public class FlowEventObject {
 
     private String userName;
     private String edge;
     private double weight;
 
-    public ChatObject() {
+    public FlowEventObject() {
     }
 
-    public ChatObject(String userName, String edge, double weight) {
+    public FlowEventObject(String userName, String edge, double weight) {
         super();
         this.userName = userName;
 	this.edge = edge;
