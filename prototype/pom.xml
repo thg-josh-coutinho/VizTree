@@ -23,15 +23,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jgrapht</groupId>
-      <artifactId>jgrapht-ext</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.corundumstudio.socketio</groupId>
       <artifactId>netty-socketio</artifactId>
-      <version>1.7.13-SNAPSHOT</version>
+      <version>1.7.7</version>
     </dependency>
 
     <dependency>
@@ -62,7 +56,6 @@
 	<configuration>
 	  <source>1.8</source>
 	  <target>1.8</target>
-	  <enableAssertions>true</enableAssertions>
 	</configuration>
       </plugin>
 
