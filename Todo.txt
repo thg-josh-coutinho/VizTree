@@ -1,13 +1,52 @@
-* So the things that need to be done are as follows:
-.. Get flow graph to compile
-. , 
-.. Implement the handler for edge updated events
-. , Create the class for grouping edge updated fields
-. , Implement the functionality to update the listeners in the graph class
-.. Handle edge weight updated events by sending, (source, target, new edge weight)
-. , Add socket io to the app
-.  . In one of the listeners add the transition functionality to the corresponding edge.
-.. Initialize the graph and route its events to the stream used for updates
-.. Implement a buffering agency on the server side that buffers graph event updates and sends them to the visualizer every 'x' milliseconds.
-.. Setup activemq
-.. Create your own activemqs that send events to you
+* Get the code running in intellij
+.* Get the normal demo working with a mocked out queue
+.* Go through the code making a list of things that you need to change and do them.
+.* Create a readme for this project
+. , How to build it
+.  . java command?
+. , How to set it up
+.  . Config files (active mq endpoints)
+. , How to run it
+.  . How do you run the tests
+.  . How to start up the server
+
+
+* Get it to work with activemq
+.. Setup active mq on your own machine
+.. Should be able to parse active mq messages
+* Flow calculation
+.. Node should become red when the flow along a particular node exceeds some threshold
+* Adding unit tests
+.. Add unit tests for the back end
+.. Concentrate on the flow 
+* Writing regression tests to demonstrate that the UI reflects the status of the order pipeline
+.. Selenium for performing these tests
+. , Setup a sample selenium test
+* Load testing the application
+.. Generate a bunch of orders on activemq
+.. Need some way of determining when the visualization has updated some of its component
+. , Read the javascript as red or not?
+* Some way of deploing it
+.. Simple javascript app.
+* Organize meeting with ali to start forwarding events from event hub.
+
+* Packaging it into a WAR to deploy on a tomcat server
+
+* Refactoring the code to minimize code changes introduced by adding new events/nodes/edges.
+.. Get the front end to add new nodes
+
+* Done:
+.. Getting code working with intellij
+. , Try debugging the current issues:
+.  . Added project sdk -  1.8
+.  . Cannot find symbol java for the import?
+.   , Cannot import java.lang
+.    . Cannot find java stuff in a new class as well.
+.    . Check the settings - What is the classpath when compiling
+.    . Check on stack overflow
+.    . Try and reproduce the error locally
+.   , 
+.  . Cannot find the dependencies
+.   , jgrapht-ext - deletedg
+.   , socketio
+. , Recreate the project

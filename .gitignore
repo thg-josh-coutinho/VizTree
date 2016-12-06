@@ -27,3 +27,9 @@ hs_err_pid*
 
 
 .#*
+
+
+.idea/
+
+activemqProducer/
+*.iml
