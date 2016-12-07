@@ -27,7 +27,7 @@ import org.jgrapht.graph.FlowGraphNode;
  * Created by CoutinhoJ on 07/12/2016.
  */
 public class FlowGraphEventStreamTest extends TestCase {
-/*
+
     private static final String NEW_ORDER_REQUEST_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
             "<newOrderRequest eventId=\"2228257\" eventTime=\"2016-12-07T15:57:34Z\" startTime=\"2016-12-07T15:57:35Z\" finishTime=\"2016-12-07T15:57:35Z\" eventType=\"NEW_ORDER_REQUEST\" xmlns=\"http://xml.thehutgroup.com/return-shipment\">\n" +
             "    <link rel=\"order\" href=\"http://ordermanager.st.io.thehut.local:8080/OrderManager/order/CatTest303230\" mediaType=\"application/vnd.thehutgroup.com+xml\"/>\n" +
@@ -72,20 +72,26 @@ public class FlowGraphEventStreamTest extends TestCase {
             "    <fulfilmentRequestLine productId=\"10606205\" quantity=\"1\"/>\n" +
             "    <invoiceLink rel=\"invoice\" href=\"http://ordermanager.st.io.thehut.local:8080/OrderManager/invoice/304116\" mediaType=\"application/vnd.thehutgroup.com+xml\"/>\n" +
             "</newInvoiceRequest>";
-    private static final String RELEASE_REQUEST = "<releaseRequest eventId=\"2228261\" eventTime=\"2016-12-07T15:57:44Z\" startTime=\"2016-12-07T15:57:45Z\" finishTime=\"2016-12-07T15:57:46Z\" eventType=\"RELEASE_REQUEST\" xmlns=\"http://xml.thehutgroup.com/return-shipment\">\n" +
+    private static final String RELEASE_REQUEST_2 = "<releaseRequest eventId=\"2228261\" eventTime=\"2016-12-07T15:57:44Z\" startTime=\"2016-12-07T15:57:45Z\" finishTime=\"2016-12-07T15:57:46Z\" eventType=\"RELEASE_REQUEST\" xmlns=\"http://xml.thehutgroup.com/return-shipment\">\n" +
             "    <link rel=\"order\" href=\"http://ordermanager.st.io.thehut.local:8080/OrderManager/order/CatTest303227\" mediaType=\"application/vnd.thehutgroup.com+xml\"/>\n" +
             "    <shipmentLink rel=\"shipment\" href=\"http://sherlock.st.io.thehut.local:8080/sherlock/shipment/15860117\" mediaType=\"application/vnd.thehutgroup.com+xml\"/>\n" +
             "</releaseRequest>";
    // private static final String RESERVATION_REQUEST = "";
     //private static final String RESERVATION_REQUEST = "";
-*/
+
 
 
     private static final String ORDER_EVENT_PACKAGE_NAME = "com.hutgroup.viztree.orderevents";
     private static final String QUEUE_NAME = "SampleQueue";
+    FlowGraphEventStream eventStream;
 
     public FlowGraphEventStreamTest(String testName) {
         super(testName);
+    }
+
+    @Override
+    public void setUp(){
+       eventStream = null; //new FlowGraphEventStream(initActiveMQConsumer(), initGraph(), initUnmarshaller());
     }
 
     public static Test suite() {
@@ -93,11 +99,17 @@ public class FlowGraphEventStreamTest extends TestCase {
     }
 
     public void testSendMessage() throws Exception {
-        FlowGraphEventStream eventStream = new FlowGraphEventStream(initActiveMQConsumer(), initGraph(), initUnmarshaller());
         //send(NEW_ORDER_REQUEST_XML);
         //eventStream.stream().allMatch((es) -> isNewOrderRequestTransition(es));
 
     }
+
+    public void testDeserializeMessage() {
+        List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_ORDER_REQUEST_XML);
+        assertEquals(output.get(1), "2");
+    }
+
+
 
     private void send(String a){
         throw new RuntimeException("Unimplemented");

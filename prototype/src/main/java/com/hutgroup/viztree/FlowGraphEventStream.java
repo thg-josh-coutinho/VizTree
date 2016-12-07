@@ -89,7 +89,7 @@ public class FlowGraphEventStream {
     }
 
 
-    private List<FlowGraphEdgeChangeEvent> deserializeFlowGraphEdgeChangeEvent(Graph g, String msg) {
+    List<FlowGraphEdgeChangeEvent> deserializeFlowGraphEdgeChangeEvent(Graph g, String msg) {
 
         System.out.println(msg);
 
@@ -131,7 +131,7 @@ public class FlowGraphEventStream {
     }
 
 
-    private List<String> unmarshallOrderManagerEdgeEvent(String inp)
+    List<String> unmarshallOrderManagerEdgeEvent(String inp)
      {
 
         Object o;
