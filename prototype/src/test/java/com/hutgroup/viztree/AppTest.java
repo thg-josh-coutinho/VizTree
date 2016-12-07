@@ -42,36 +42,14 @@ public class AppTest
     }
 
     public void testApp() throws  Exception {
-        Scanner sc = new Scanner(System.in);
 
         Tuple<Stream<List<FlowGraphEdgeChangeEvent>>, FlowGraph> t = initGraph();
 
-        App app = new App(t._1, t._2, initUnmarshaller());
+        App app = new App(t._1, t._2);
 
         app.runApp();
     }
 
-
-    private static MessageConsumer initActiveMQConsumer() {
-        try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
-
-            Connection connection = connectionFactory.createConnection();
-            connection.start();
-
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            Destination destination = session.createQueue("SampleQueue");
-
-            return session.createConsumer(destination);
-
-        } catch (Exception e) {
-            System.out.println("Could not connect to activemq");
-            System.exit(1);
-        }
-
-        return null;
-
-    }
 
     private static class MockMessageConsumer {
         int counter;
@@ -205,30 +183,7 @@ public class AppTest
 
         FlowGraphEdge e21 = graph.addEdge(v1, v11);
         graph.setEdgeWeight(e19, 1);
-        /*
-        edgeMap.put(("eq|21"), e1);
-        edgeMap.put(("21|1"), e2);
-        edgeMap.put(("1|2"), e3);
-        edgeMap.put(("2|3"), e4);
-        edgeMap.put(("3|3"), e5);
-        edgeMap.put(("3|14"), e6);
-        edgeMap.put(("14|4"), e7);
-        edgeMap.put(("4|22"), e8);
-        edgeMap.put(("3|4"), e6a);
-        edgeMap.put(("4|5"), e8a);
-        edgeMap.put(("5|6"), e10);
-        edgeMap.put(("6|7"), e11);
-        edgeMap.put(("6|8"), e12);
-        edgeMap.put(("1|10"), e13);
-        edgeMap.put(("10|11"), e14);
-        edgeMap.put(("11|12"), e15);
-        edgeMap.put(("11|13"), e16);
-        edgeMap.put(("4|9"), e17);
-        edgeMap.put(("9|2"), e18);
-        edgeMap.put(("2|11"), e19);
-        edgeMap.put(("10|1"), e20);
-        edgeMap.put(("1|11"), e21);
-        */
+
 
         FlowGraphNode edgeSource1 = v1;
         FlowGraphNode edgeTarget1 = v2;
@@ -337,36 +292,12 @@ public class AppTest
                 edgeSource14, edgeTarget14, oldWeight14, newWeight14));
 
 
-
         //----------------End of definition of the queue ----------------------------------
+
         Tuple<Stream<List<FlowGraphEdgeChangeEvent>>, FlowGraph> pair
                 = new Tuple<>(new MockMessageConsumer(updateQueue).stream(), graph);
 
         return pair;
-    }
-
-    private static Unmarshaller initUnmarshaller() {
-        String packageNames = "com.hutgroup.viztree.orderevents";
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(packageNames);
-            return jaxbContext.createUnmarshaller();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Could not create the unmarshaller, exiting");
-            System.exit(1);
-        }
-        return null;
-    }
-
-
-    private static void init() throws Exception {
-
-        initActiveMQConsumer();
-
-        initGraph();
-
-        initUnmarshaller();
-
     }
 
 

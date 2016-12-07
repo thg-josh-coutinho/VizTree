@@ -1,6 +1,7 @@
 * Get the code running in intellij
-.* Get the normal demo working with a mocked out queue
 .* Go through the code making a list of things that you need to change and do them.
+. , Abnormal build process termination
+.  . Could not reserve enough space for the object heap in the program unforunately
 .* Create a readme for this project
 . , How to build it
 .  . java command?
@@ -35,6 +36,8 @@
 * Refactoring the code to minimize code changes introduced by adding new events/nodes/edges.
 .. Get the front end to add new nodes
 
+* Add drill down into the software
+
 * Done:
 .. Getting code working with intellij
 . , Try debugging the current issues:
@@ -50,3 +53,43 @@
 .   , jgrapht-ext - deletedg
 .   , socketio
 . , Recreate the project
+.. Pull any outstanding changes from origin/josh
+.. Change the theme of intellij
+.. Check that it prints to the console on sending a message
+. , FlowGraphListener
+.* Get the normal demo working with a mocked out queue
+. , Run the web server
+. , Open up the console
+. , Run the Test application
+.  . !!! JUnit version 3.8 or later expected:
+
+java.lang.NoClassDefFoundError: org/junit/runner/notification/RunListener
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:264)
+	at com.intellij.rt.execution.junit.JUnitStarter.getAgentClass(JUnitStarter.java:266)
+	at com.intellij.rt.execution.junit.JUnitStarter.junitVersionChecks(JUnitStarter.java:222)
+	at com.intellij.rt.execution.junit.JUnitStarter.canWorkWithJUnitVersion(JUnitStarter.java:207)
+	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:75)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:147)
+Caused by: java.lang.ClassNotFoundException: org.junit.runner.notification.RunListener
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 11 more
+.  . JUnit version 3.8 expected
+.   , Either my pom wants a version that is greater than on my laptop
+.   , Something uses a feature that is only present in junit 3.8 or higher
+.   , Command
+.    . "C:\Program Files (x86)\Java\jdk1.8.0_122\bin\java" -ea -Didea.launcher.port=7532 "-Didea.launcher.bin.path=C:\Program Files (x86)\JetBrains\IntelliJ IDEA Community Edition 2016.2.1\bin" -Didea.junit.sm_runner -Dfile.encoding=UTF-8 -classpath "C:\Program Files (x86)\JetBrains\IntelliJ IDEA Community Edition 2016.2.1\lib\idea_rt.jar;C:\Program Files (x86)\JetBrains\IntelliJ IDEA Community Edition 2016.2.1\plugins\junit\lib\junit-rt.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\charsets.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\deploy.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\access-bridge-32.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\cldrdata.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\dnsns.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\jaccess.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\jfxrt.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\localedata.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\nashorn.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\sunec.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\sunjce_provider.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\sunmscapi.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\sunpkcs11.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\ext\zipfs.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\javaws.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\jce.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\jfxswt.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\jsse.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\management-agent.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\plugin.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\resources.jar;C:\Program Files (x86)\Java\jdk1.8.0_122\jre\lib\rt.jar;C:\Users\coutinhoj\work\Utils\Algorithm\VizTree\prototype\target\test-classes;C:\Users\coutinhoj\work\Utils\Algorithm\VizTree\prototype\target\classes;C:\Users\coutinhoj\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;C:\Users\coutinhoj\work\Utils\Algorithm\VizTree\lib\jgrapht\jgrapht-core\target\classes;C:\Users\coutinhoj\.m2\repository\com\corundumstudio\socketio\netty-socketio\1.7.7\netty-socketio-1.7.7.jar;C:\Users\coutinhoj\.m2\repository\io\netty\netty-buffer\4.0.25.Final\netty-buffer-4.0.25.Final.jar;C:\Users\coutinhoj\.m2\repository\io\netty\netty-common\4.0.25.Final\netty-common-4.0.25.Final.jar;C:\Users\coutinhoj\.m2\repository\io\netty\netty-transport\4.0.25.Final\netty-transport-4.0.25.Final.jar;C:\Users\coutinhoj\.m2\repository\io\netty\netty-handler\4.0.25.Final\netty-handler-4.0.25.Final.jar;C:\Users\coutinhoj\.m2\repository\io\netty\netty-codec-http\4.0.25.Final\netty-codec-http-4.0.25.Final.jar;C:\Users\coutinhoj\.m2\repository\io\netty\netty-codec\4.0.25.Final\netty-codec-4.0.25.Final.jar;C:\Users\coutinhoj\.m2\repository\io\netty\netty-transport-native-epoll\4.0.25.Final\netty-transport-native-epoll-4.0.25.Final.jar;C:\Users\coutinhoj\.m2\repository\org\slf4j\slf4j-api\1.7.7\slf4j-api-1.7.7.jar;C:\Users\coutinhoj\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.4.3\jackson-core-2.4.3.jar;C:\Users\coutinhoj\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.4.3\jackson-databind-2.4.3.jar;C:\Users\coutinhoj\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.4.0\jackson-annotations-2.4.0.jar;C:\Users\coutinhoj\.m2\repository\org\apache\activemq\activemq-all\5.7.0\activemq-all-5.7.0.jar;C:\Users\coutinhoj\.m2\repository\com\josh\utils\utils\1.0-SNAPSHOT\utils-1.0-SNAPSHOT.jar" com.intellij.rt.execution.application.AppMain com.intellij.rt.execution.junit.JUnitStarter -ideVersion5 com.hutgroup.viztree.AppTest
+.   , It's using another version of junit to compile against
+.    . What is this com.intellij.rt.execution.junit.JUnitStarter
+.   , Different versions for junit across the poms
+
+. , Check that messages are getting printed
+. , Check that the console is recieving messages
+. , Check that the ui is responding appropriately

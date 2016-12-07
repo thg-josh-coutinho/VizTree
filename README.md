@@ -19,4 +19,11 @@ Dependencies:
 
 jgraph library, available at:
 
-java socket io library available at: 
+java socket io library available at:
+
+
+Adding a New Event:
+===================
+
+In the camel routes section add the statement to multicast to the queue:
+flowvisualization.om

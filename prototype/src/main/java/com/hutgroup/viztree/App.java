@@ -36,13 +36,11 @@ public class App {
     public static final int EVENT_DELAY = 200;
     private FlowGraph graph;
     private Stream<List<FlowGraphEdgeChangeEvent>> edgeEventStream;
-    private Unmarshaller jaxbUnmarshaller;
     private List<FlowGraphEdgeChangeEvent> messages;
 
-    public App(Stream<List<FlowGraphEdgeChangeEvent>> inputStream, FlowGraph graph, Unmarshaller unmarshaller) {
+    public App(Stream<List<FlowGraphEdgeChangeEvent>> inputStream, FlowGraph graph) {
         this.edgeEventStream = inputStream;
         this.graph = graph;
-        this.jaxbUnmarshaller = unmarshaller;
     }
 
 
