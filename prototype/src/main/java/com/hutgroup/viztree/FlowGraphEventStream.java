@@ -31,38 +31,35 @@ import com.josh.utils.Tuple;
 import com.josh.utils.StringUtils;
 
 public class FlowGraphEventStream {
-    /*
+
     public static final int EVENT_DELAY = 200;
 
     MessageConsumer consumer;
     FlowGraph graph;
-    Stream<List<FlowGraphEdgeChangeEvent>> edgeEventStream;
     Map<String, FlowGraphEdge> edgeMap;
     Unmarshaller jaxbUnmarshaller;
     Map<String, Tuple<String, String>> orderTracker;
-    int counter = 0;
-    List<FlowGraphEdgeEvent> messages;
 
     public FlowGraphEventStream(MessageConsumer consumer, FlowGraph graph, Unmarshaller unmarshaller) {
         edgeMap = new HashMap<>();
         orderTracker = new HashMap<>();
 
-        this.edgeEventStream = inputStream;
+        this.consumer = consumer;
         this.graph = graph;
-        this.unmarhsaller = unmarshaller;
+        this.jaxbUnmarshaller = unmarshaller;
 
-        initMessages();
+    ///        initMessages();
     }
 
     public Stream<List<FlowGraphEdgeChangeEvent>> stream() {
         return Stream.iterate(nextUpdate(), prev -> nextUpdate());
     }
-    */
+
     /**
      * Pulls the next update from the MessageConsumer stream and parses it into
      * a flow graph edge change event.
      */
-    /*
+
     private List<FlowGraphEdgeChangeEvent> nextUpdate() {
         System.out.println("Requesting a new update from the graph");
         String message = null;
@@ -87,17 +84,16 @@ public class FlowGraphEventStream {
 
         System.out.println("Delivering: " + message);
 
-        return deserializeFlowGraphEdgeChangeEvent(graph,
-                App::unmarshallOrderManagerEdgeEvent,
-                message);
+        return deserializeFlowGraphEdgeChangeEvent(graph, message);
 
     }
 
-    private List<FlowGraphEdgeChangeEvent> deserializeFlowGraphEdgeChangeEvent(Graph g, Function<String, List<String>> deserializer, String msg) {
+
+    private List<FlowGraphEdgeChangeEvent> deserializeFlowGraphEdgeChangeEvent(Graph g, String msg) {
 
         System.out.println(msg);
 
-        List<String> parts = deserializer.apply(msg);
+        List<String> parts = unmarshallOrderManagerEdgeEvent(msg);
         String edgeSourceString = parts.get(0);
         String edgeMidTargetString = parts.get(1);
         String edgeMidSourceString = parts.get(1);
@@ -135,7 +131,8 @@ public class FlowGraphEventStream {
     }
 
 
-    private List<String> unmarshallOrderManagerEdgeEvent(String inp) {
+    private List<String> unmarshallOrderManagerEdgeEvent(String inp)
+     {
 
         Object o;
 
@@ -156,65 +153,65 @@ public class FlowGraphEventStream {
             orderId = ((CancelOrderRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "11";
         }
-        if (caseAnalysis instanceof ChargeInvoiceRequest) {
+        else if (caseAnalysis instanceof ChargeInvoiceRequest) {
             orderId = ((ChargeInvoiceRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "2";
         }
-        if (caseAnalysis instanceof DespatchEvent) {
+        else if (caseAnalysis instanceof DespatchEvent) {
             orderId = ((DespatchEvent) caseAnalysis).getLink().getHref();
             newStateTarget = "5";
         }
-        if (caseAnalysis instanceof FraudCheckRequest) {
+        else if (caseAnalysis instanceof FraudCheckRequest) {
             orderId = ((FraudCheckRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "3";
         }
-        if (caseAnalysis instanceof FraudStatusUpdate) {
+        else if (caseAnalysis instanceof FraudStatusUpdate) {
             orderId = ((FraudStatusUpdate) caseAnalysis).getLink().getHref();
             newStateTarget = "3";
         }
-        if (caseAnalysis instanceof FulfilmentRequest) {
+        else if (caseAnalysis instanceof FulfilmentRequest) {
             orderId = ((FulfilmentRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "3";
         }
-        if (caseAnalysis instanceof InvoiceFailureEvent) {
+        else if (caseAnalysis instanceof InvoiceFailureEvent) {
             orderId = ((InvoiceFailureEvent) caseAnalysis).getLink().getHref();
             newStateTarget = "8";
         }
-        if (caseAnalysis instanceof InvoiceRetryEvent) {
+        else if (caseAnalysis instanceof InvoiceRetryEvent) {
             orderId = ((InvoiceRetryEvent) caseAnalysis).getLink().getHref();
             newStateTarget = "8";
         }
-        if (caseAnalysis instanceof InvoiceSuccessEvent) {
+        else if (caseAnalysis instanceof InvoiceSuccessEvent) {
             orderId = ((InvoiceSuccessEvent) caseAnalysis).getLink().getHref();
             newStateTarget = "7";
         }
-        if (caseAnalysis instanceof NewInvoiceRequest) {
+        else if (caseAnalysis instanceof NewInvoiceRequest) {
             orderId = ((NewInvoiceRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "2";
         }
-        if (caseAnalysis instanceof NewOrderRequest) {
+        else if (caseAnalysis instanceof NewOrderRequest) {
             orderId = ((NewOrderRequest) caseAnalysis).
                     getLink().
                     getHref();
             newStateTarget = "2";
         }
-        if (caseAnalysis instanceof PayresolveRefulfilmentRequest) {
+        else if (caseAnalysis instanceof PayresolveRefulfilmentRequest) {
             orderId = ((PayresolveRefulfilmentRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "1";
         }
-        if (caseAnalysis instanceof RefundOrderRequest) {
+        else if (caseAnalysis instanceof RefundOrderRequest) {
             orderId = ((RefundOrderRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "6";
         }
-        if (caseAnalysis instanceof ReleaseRequest) {
+        else if (caseAnalysis instanceof ReleaseRequest) {
             orderId = ((ReleaseRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "4";
         }
-        if (caseAnalysis instanceof ReplaceOrderRequest) {
+        else if (caseAnalysis instanceof ReplaceOrderRequest) {
             orderId = ((ReplaceOrderRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "1";
         }
-        if (caseAnalysis instanceof ReservationRequest) {
+        else if (caseAnalysis instanceof ReservationRequest) {
             orderId = ((ReservationRequest) caseAnalysis).getLink().getHref();
             newStateTarget = "3";
         } else {
@@ -225,11 +222,11 @@ public class FlowGraphEventStream {
         Tuple<String, String> p = orderTracker.get(orderId);
 
         if (p == null) {
-            p = new Tuple<String, String>("1", "1");
+            p = new Tuple<>("1", "1");
             orderTracker.put(orderId, p);
         }
 
-        orderTracker.put(orderId, new Tuple<String, String>(p._2, newStateTarget));
+        orderTracker.put(orderId, new Tuple<>(p._2, newStateTarget));
 
         List<String> result = new LinkedList<String>();
 
@@ -242,7 +239,7 @@ public class FlowGraphEventStream {
 
     }
 
-    */
+
 
 
 }

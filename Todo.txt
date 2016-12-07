@@ -1,7 +1,4 @@
 * Get the code running in intellij
-.* Go through the code making a list of things that you need to change and do them.
-. , Abnormal build process termination
-.  . Could not reserve enough space for the object heap in the program unforunately
 .* Create a readme for this project
 . , How to build it
 .  . java command?
@@ -13,8 +10,11 @@
 
 
 * Get it to work with activemq
+.. First write the deserializer locally on your own machine
+.. Write a test for the deserealizer that sends a message and then polls a message
 .. Setup active mq on your own machine
 .. Should be able to parse active mq messages
+.. Check whether it deserializes it correctly
 * Flow calculation
 .. Node should become red when the flow along a particular node exceeds some threshold
 * Adding unit tests
@@ -29,14 +29,16 @@
 . , Read the javascript as red or not?
 * Some way of deploing it
 .. Simple javascript app.
-* Organize meeting with ali to start forwarding events from event hub.
-
+.* Go through the code making a list of things that you need to change and do them.
+. , Abnormal build process termination
+.  . Could not reserve enough space for the object heap in the program unforunately
 * Packaging it into a WAR to deploy on a tomcat server
 
 * Refactoring the code to minimize code changes introduced by adding new events/nodes/edges.
 .. Get the front end to add new nodes
 
 * Add drill down into the software
+
 
 * Done:
 .. Getting code working with intellij
@@ -93,3 +95,4 @@ Caused by: java.lang.ClassNotFoundException: org.junit.runner.notification.RunLi
 . , Check that messages are getting printed
 . , Check that the console is recieving messages
 . , Check that the ui is responding appropriately
+.* Organize meeting with ali to start forwarding events from event hub.

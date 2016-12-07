@@ -70,6 +70,8 @@ public class App {
 
         g.setEdgeWeight(update.getEdge(), update.getNewWeight());
 
+
+        // remove this eventually
         try {
             Thread.sleep(EVENT_DELAY);
         } catch (Exception e) {

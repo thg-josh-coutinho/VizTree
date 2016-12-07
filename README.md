@@ -27,3 +27,6 @@ Adding a New Event:
 
 In the camel routes section add the statement to multicast to the queue:
 flowvisualization.om
+
+
+This currently also needs to be added to AppTest in the if case block under the deserializeEvent section.
