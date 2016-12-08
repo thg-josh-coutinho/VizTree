@@ -36,6 +36,7 @@ public class FlowGraphEventStream {
 
     public static final int EVENT_DELAY = 200;
     public static final String DEFAULT_STATE = "1";
+    public static final int RECEIVE_TIME_OUT = 1000;
     MessageConsumer consumer;
     FlowGraph graph;
     Map<String, FlowGraphEdge> edgeMap;
@@ -79,18 +80,18 @@ public class FlowGraphEventStream {
 
         String message = null;
 
-        for (int i = 0; i <= 3; i++) {
-            try {
-                Message msg = consumer.receive();
-                if (!(msg instanceof TextMessage)) {
-                    throw new RuntimeException("Expected a TextMessage");
-                }
-                message = ((TextMessage) msg).getText();
-
-            } catch (Exception e) {
-                    System.err.println(e);
+        try {
+            Message msg = consumer.receive(RECEIVE_TIME_OUT);
+            if (!(msg instanceof TextMessage)) {
+                return null;
             }
+
+            message = ((TextMessage) msg).getText();
+
+        } catch (Exception e) {
+            return null;
         }
+
 
         return deserializeFlowGraphEdgeChangeEvent(graph, message);
 

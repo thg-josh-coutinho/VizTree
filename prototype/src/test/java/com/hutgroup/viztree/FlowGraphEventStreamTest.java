@@ -11,10 +11,7 @@ import org.apache.activemq.transport.stomp.Stomp;
 import org.apache.activemq.transport.tcp.ExceededMaximumConnectionsException;
 import org.jgrapht.event.FlowGraphEdgeChangeEvent;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
+import javax.jms.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
@@ -86,10 +83,13 @@ public class FlowGraphEventStreamTest extends TestCase {
     //private static final String RESERVATION_REQUEST = "";
 
 
-    private static final String ORDER_EVENT_PACKAGE_NAME = "com.hutgroup.viztree.orderevents";
     private static final String QUEUE_NAME = "SampleQueue";
+    private static final String BROKER_ADDRESS = "http://activemq1.st.thehutgroup.local:8161/admin/queues.jsp";
+
+
     FlowGraphEventStream eventStream;
     Map<String, String> configMap;
+    Session session;
 
     public FlowGraphEventStreamTest(String testName) {
         super(testName);
@@ -104,37 +104,75 @@ public class FlowGraphEventStreamTest extends TestCase {
         return new TestSuite(FlowGraphEventStreamTest.class);
     }
 
-    public void testSendMessage() throws Exception {
+    public void test_send_message() throws JMSException {
 
-        //send(NEW_ORDER_REQUEST_XML);
-        //eventStream.stream().allMatch((es) -> isNewOrderRequestTransition(es));
+
+        session = initActiveMQSession();
+        Destination destination = session.createQueue(QUEUE_NAME);
+        MessageProducer producer = session.createProducer(destination);
+
+        eventStream = new FlowGraphEventStream(session.createConsumer(destination), initGraph(), configMap);
+
+        exhaustQueue();
+
+        producer.send(session.createTextMessage(NEW_ORDER_REQUEST_XML));
+        eventStream.stream().forEach((es) -> isNewOrderRequestTransition(es));
+
+        producer.send(session.createTextMessage(RELEASE_REQUEST));
+        eventStream.stream().forEach((es) -> isReleaseRequestTransition(es));
+
+        producer.send(session.createTextMessage(RESERVATION_REQUEST));
+        eventStream.stream().forEach((es) -> isReservationRequestTransition(es));
+
+        producer.send(session.createTextMessage(NEW_INVOICE_REQUEST));
+        eventStream.stream().forEach((es) -> isNewInvoiceRequestTransition(es));
+
 
     }
 
-    private Map<String, String> readConfigMap() throws FileNotFoundException {
+    private void exhaustQueue(){
+        eventStream.stream().allMatch(n -> n != null);
+    }
 
-        Map<String, String> result = new HashMap<>();
+    private void isNewOrderRequestTransition(List<FlowGraphEdgeChangeEvent> es) {
+        assertEquals(configMap.get(FlowEventObject.NEW_ORDER_REQUEST_STRING), es.get(1).getEdgeTarget().getId());
+    }
 
-        ClassLoader classLoader = getClass().getClassLoader();
-        Scanner configFile = new Scanner(
-                    new FileInputStream(
-                            new File(
-                                    classLoader.getResource("ForwardingMap.txt").getFile())
-                    )
-            );
+    private void isReleaseRequestTransition(List<FlowGraphEdgeChangeEvent> es) {
+        assertEquals(configMap.get(FlowEventObject.RELEASE_REQUEST_STRING), es.get(1).getEdgeTarget().getId());
+    }
 
-        while(configFile.hasNext()){
-            result.put(configFile.next(), configFile.next());
+    private void isReservationRequestTransition(List<FlowGraphEdgeChangeEvent> es) {
+        assertEquals(configMap.get(FlowEventObject.RESERVATION_REQUEST_STRING), es.get(1).getEdgeTarget().getId());
+    }
+
+    private void isNewInvoiceRequestTransition(List<FlowGraphEdgeChangeEvent> es) {
+        assertEquals(configMap.get(FlowEventObject.NEW_INVOICE_REQUEST_STRING), es.get(1).getEdgeTarget().getId());
+    }
+
+
+    private Session initActiveMQSession() {
+        try {
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_ADDRESS);
+
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+        } catch (Exception e) {
+            System.out.println("Could not connect to activemq");
+            System.exit(1);
         }
+        return null;
+    }
 
-        return result;
+    private void send(String msg) {
 
     }
 
     public void test_deserialize_new_order_request_message() throws FileNotFoundException {
-        Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
-
-        eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
+        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_ORDER_REQUEST_XML);
         assertEquals("2", output.get(3));
@@ -144,27 +182,22 @@ public class FlowGraphEventStreamTest extends TestCase {
     }
 
     public void test_deserialize_reservation_request() throws FileNotFoundException {
-        Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
-
-        eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
+        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(RESERVATION_REQUEST);
         assertEquals("3", output.get(3));
     }
 
     public void test_deserialize_new_invoice_request() throws FileNotFoundException {
-        Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
-
-        eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
+        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_INVOICE_REQUEST);
         assertEquals("2", output.get(3));
     }
 
     public void test_deserialize_release_request() throws FileNotFoundException {
-        Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
 
-        eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
+        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(RELEASE_REQUEST);
         assertEquals("4", output.get(3));
@@ -173,16 +206,28 @@ public class FlowGraphEventStreamTest extends TestCase {
         assertEquals("4", output2.get(3));
     }
 
+    private Map<String, String> readConfigMap() throws FileNotFoundException {
 
-    private void send(String a) {
-        throw new RuntimeException("Unimplemented");
+        Map<String, String> result = new HashMap<>();
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        Scanner configFile = new Scanner(
+                new FileInputStream(
+                        new File(
+                                classLoader.getResource("ForwardingMap.txt").getFile())
+                )
+        );
+
+        while(configFile.hasNext()){
+            result.put(configFile.next(), configFile.next());
+        }
+
+        return result;
+
     }
 
-    private boolean isNewOrderRequestTransition(List<FlowGraphEdgeChangeEvent> es) {
-        throw new RuntimeException("Unimplemented");
-    }
 
-    private static Tuple<MockMessageConsumer, FlowGraph> initGraph() {
+    private static FlowGraph initGraph() {
 
         FlowGraph graph = new FlowGraph();
         graph.addGraphListener(new FlowGraphListener());
@@ -288,9 +333,10 @@ public class FlowGraphEventStreamTest extends TestCase {
         FlowGraphEdge e21 = graph.addEdge(v1, v11);
         graph.setEdgeWeight(e19, 1);
 
-        //----------------End of definition of the graph ----------------------------------
+        return graph;
+    }
 
-
+    private MockMessageConsumer initMockMessageConsumer(){
         List<String> msgs = new LinkedList<>();
         msgs.add(NEW_ORDER_REQUEST_XML);
         msgs.add(NEW_ORDER_REQUEST_XML_2);
@@ -299,30 +345,9 @@ public class FlowGraphEventStreamTest extends TestCase {
         msgs.add(RELEASE_REQUEST);
         msgs.add(NEW_INVOICE_REQUEST );
         msgs.add(RELEASE_REQUEST_2);
-
-        Tuple<MockMessageConsumer, FlowGraph> pair
-                = new Tuple<>(new MockMessageConsumer(msgs), graph);
-
-        return pair;
+        return new MockMessageConsumer(msgs);
     }
 
-    private static MessageConsumer initActiveMQConsumer() {
-        try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
 
-            Connection connection = connectionFactory.createConnection();
-            connection.start();
-
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            Destination destination = session.createQueue(QUEUE_NAME);
-
-            return session.createConsumer(destination);
-
-        } catch (Exception e) {
-            System.out.println("Could not connect to activemq");
-            System.exit(1);
-        }
-        return null;
-    }
 
 }
