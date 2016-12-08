@@ -105,10 +105,10 @@ public class FlowGraphEventStreamTest extends TestCase {
 
     public void testDeserializeMessage() {
         Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
-        eventStream = new FlowGraphEventStream(pair._1, pair._2, initUnmarshaller());
+        eventStream = new FlowGraphEventStream(pair._1, pair._2);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_ORDER_REQUEST_XML);
-        assertEquals(output.get(1), "2");
+        assertEquals("2", output.get(1));
     }
 
 
@@ -258,19 +258,6 @@ public class FlowGraphEventStreamTest extends TestCase {
 
         } catch (Exception e) {
             System.out.println("Could not connect to activemq");
-            System.exit(1);
-        }
-        return null;
-    }
-
-    private static Unmarshaller initUnmarshaller() {
-        String packageNames = ORDER_EVENT_PACKAGE_NAME;
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(packageNames);
-            return jaxbContext.createUnmarshaller();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Could not create the unmarshaller, exiting");
             System.exit(1);
         }
         return null;

@@ -12,6 +12,8 @@ import javax.xml.bind.*;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.*;
 import java.util.function.*;
 import java.util.*;
@@ -37,18 +39,15 @@ public class FlowGraphEventStream {
     MessageConsumer consumer;
     FlowGraph graph;
     Map<String, FlowGraphEdge> edgeMap;
-    Unmarshaller jaxbUnmarshaller;
     Map<String, Tuple<String, String>> orderTracker;
 
-    public FlowGraphEventStream(MessageConsumer consumer, FlowGraph graph, Unmarshaller unmarshaller) {
+    public FlowGraphEventStream(MessageConsumer consumer, FlowGraph graph) {
         edgeMap = new HashMap<>();
         orderTracker = new HashMap<>();
 
         this.consumer = consumer;
         this.graph = graph;
-        this.jaxbUnmarshaller = unmarshaller;
 
-    ///        initMessages();
     }
 
     public Stream<List<FlowGraphEdgeChangeEvent>> stream() {
@@ -61,7 +60,7 @@ public class FlowGraphEventStream {
      */
 
     private List<FlowGraphEdgeChangeEvent> nextUpdate() {
-        System.out.println("Requesting a new update from the graph");
+
         String message = null;
 
         for (int i = 0; i <= 3; i++) {
@@ -73,16 +72,9 @@ public class FlowGraphEventStream {
                 message = ((TextMessage) msg).getText();
 
             } catch (Exception e) {
-                try {
                     System.err.println(e);
-                    Thread.sleep((int) (1000 * Math.pow(2, i)));
-                } catch (Exception e2) {
-                    System.out.println(e2);
-                }
             }
         }
-
-        System.out.println("Delivering: " + message);
 
         return deserializeFlowGraphEdgeChangeEvent(graph, message);
 
@@ -134,99 +126,87 @@ public class FlowGraphEventStream {
     List<String> unmarshallOrderManagerEdgeEvent(String inp)
      {
 
-        Object o;
+         String orderTypeRegex = "eventType[ ]*=[ ]*\\\"([^\\\"]*)\\\"";
+         Pattern orderTypePattern = Pattern.compile(orderTypeRegex);
+         Matcher orderTypeMatcher = orderTypePattern.matcher(inp);
 
-        try {
-            o = jaxbUnmarshaller.unmarshal(new StringReader(inp));
-        } catch (Exception e) {
-            System.out.println("Failed to parse " + inp);
-            return null;
-        }
 
-        Object caseAnalysis = ((JAXBElement) o).getValue();
+         String orderNumberRegex = "<orderNumber>([^<]*)";
+         Pattern orderNumberPattern = Pattern.compile(orderNumberRegex);
+         Matcher orderNumberMatcher = orderNumberPattern.matcher(inp);
+
+
+        String caseAnalysis = "", orderNumber = "";
+
+         if(orderNumberMatcher.find() && orderTypeMatcher.find()){
+             caseAnalysis = orderTypeMatcher.group(1);
+             orderNumber = orderNumberMatcher.group(1);
+
+         }
+
 
         String newStateTarget;
-        String orderId;
 
         // Same events correspond to different edges
-        if (caseAnalysis instanceof CancelOrderRequest) {
-            orderId = ((CancelOrderRequest) caseAnalysis).getLink().getHref();
+        if (caseAnalysis.equals("CancelOrderRequest")) {
             newStateTarget = "11";
         }
-        else if (caseAnalysis instanceof ChargeInvoiceRequest) {
-            orderId = ((ChargeInvoiceRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("ChargeInvoiceRequest")) {
             newStateTarget = "2";
         }
-        else if (caseAnalysis instanceof DespatchEvent) {
-            orderId = ((DespatchEvent) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("DespatchEvent")) {
             newStateTarget = "5";
         }
-        else if (caseAnalysis instanceof FraudCheckRequest) {
-            orderId = ((FraudCheckRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("FraudCheckRequest")) {
             newStateTarget = "3";
         }
-        else if (caseAnalysis instanceof FraudStatusUpdate) {
-            orderId = ((FraudStatusUpdate) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("FraudStatusUpdate")) {
             newStateTarget = "3";
         }
-        else if (caseAnalysis instanceof FulfilmentRequest) {
-            orderId = ((FulfilmentRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("FulfilmentRequest")) {
             newStateTarget = "3";
         }
-        else if (caseAnalysis instanceof InvoiceFailureEvent) {
-            orderId = ((InvoiceFailureEvent) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("InvoiceFailureEvent")) {
             newStateTarget = "8";
         }
-        else if (caseAnalysis instanceof InvoiceRetryEvent) {
-            orderId = ((InvoiceRetryEvent) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("InvoiceRetryEvent")) {
             newStateTarget = "8";
         }
-        else if (caseAnalysis instanceof InvoiceSuccessEvent) {
-            orderId = ((InvoiceSuccessEvent) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("InvoiceSuccessEvent")) {
             newStateTarget = "7";
         }
-        else if (caseAnalysis instanceof NewInvoiceRequest) {
-            orderId = ((NewInvoiceRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("NewInvoiceRequest")) {
             newStateTarget = "2";
         }
-        else if (caseAnalysis instanceof NewOrderRequest) {
-            orderId = ((NewOrderRequest) caseAnalysis).
-                    getLink().
-                    getHref();
+        else if (caseAnalysis.equals("NewOrderRequest")) {
             newStateTarget = "2";
         }
-        else if (caseAnalysis instanceof PayresolveRefulfilmentRequest) {
-            orderId = ((PayresolveRefulfilmentRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("PayresolveRefulfilmentRequest")) {
             newStateTarget = "1";
         }
-        else if (caseAnalysis instanceof RefundOrderRequest) {
-            orderId = ((RefundOrderRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("RefundOrderRequest")) {
             newStateTarget = "6";
         }
-        else if (caseAnalysis instanceof ReleaseRequest) {
-            orderId = ((ReleaseRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("ReleaseRequest")) {
             newStateTarget = "4";
         }
-        else if (caseAnalysis instanceof ReplaceOrderRequest) {
-            orderId = ((ReplaceOrderRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("ReplaceOrderRequest")) {
             newStateTarget = "1";
         }
-        else if (caseAnalysis instanceof ReservationRequest) {
-            orderId = ((ReservationRequest) caseAnalysis).getLink().getHref();
+        else if (caseAnalysis.equals("ReservationRequest")) {
             newStateTarget = "3";
         } else {
-            orderId = null;
             newStateTarget = "12";
         }
 
-        Tuple<String, String> p = orderTracker.get(orderId);
+        Tuple<String, String> p = orderTracker.get(orderNumber);
 
         if (p == null) {
             p = new Tuple<>("1", "1");
-            orderTracker.put(orderId, p);
+            orderTracker.put(orderNumber, p);
         }
 
-        orderTracker.put(orderId, new Tuple<>(p._2, newStateTarget));
+        orderTracker.put(orderNumber, new Tuple<>(p._2, newStateTarget));
 
         List<String> result = new LinkedList<String>();
 
