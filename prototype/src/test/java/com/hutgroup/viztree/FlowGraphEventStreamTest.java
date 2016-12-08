@@ -131,13 +131,46 @@ public class FlowGraphEventStreamTest extends TestCase {
 
     }
 
-    public void testDeserializeMessage() throws FileNotFoundException {
+    public void test_deserialize_new_order_request_message() throws FileNotFoundException {
         Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
 
         eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_ORDER_REQUEST_XML);
         assertEquals("2", output.get(3));
+
+        List<String> output2 = eventStream.unmarshallOrderManagerEdgeEvent(NEW_ORDER_REQUEST_XML_2);
+        assertEquals("2", output2.get(3));
+    }
+
+    public void test_deserialize_reservation_request() throws FileNotFoundException {
+        Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
+
+        eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
+
+        List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(RESERVATION_REQUEST);
+        assertEquals("3", output.get(3));
+    }
+
+    public void test_deserialize_new_invoice_request() throws FileNotFoundException {
+        Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
+
+        eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
+
+        List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_INVOICE_REQUEST);
+        assertEquals("2", output.get(3));
+    }
+
+    public void test_deserialize_release_request() throws FileNotFoundException {
+        Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
+
+        eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
+
+        List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(RELEASE_REQUEST);
+        assertEquals("4", output.get(3));
+
+        List<String> output2 = eventStream.unmarshallOrderManagerEdgeEvent(RELEASE_REQUEST_2);
+        assertEquals("4", output2.get(3));
     }
 
 

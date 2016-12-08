@@ -42,6 +42,21 @@ public class FlowGraphEventStream {
     Map<String, Tuple<String, String>> orderTracker;
     Map<String, String> forwardingMap;
 
+    private static final String ORDER_NUMBER_REGEX = "<orderNumber>([^<]*)";
+    private static final Pattern ORDER_NUMBER_PATTERN= Pattern.compile(ORDER_NUMBER_REGEX);
+
+    private static final String ORDER_TYPE_REGEX = "eventType[ ]*=[ ]*\"([^\"]*)\"";
+    private static final Pattern ORDER_TYPE_PATTERN = Pattern.compile(ORDER_TYPE_REGEX);
+
+    // TODO: Need to change this to the actual regex that finds the link inside the order body
+    private static final String ORDER_LINK_REGEX = "<link rel=\"order\" href=\"([^\"]*)\"";
+    private static final Pattern ORDER_LINK_PATTERN = Pattern.compile(ORDER_LINK_REGEX );
+
+    // TODO: Need to change this to the actual regex that finds the order number inside the link
+    private static final String ORDER_NUMBER_FROM_LINK_REGEX = "/([^/]*)$";
+    private static final Pattern ORDER_NUMBER_FROM_LINK_PATTERN = Pattern.compile(ORDER_NUMBER_FROM_LINK_REGEX );
+
+
     public FlowGraphEventStream(MessageConsumer consumer, FlowGraph graph, Map<String, String> forwardingMap) {
         edgeMap = new HashMap<>();
         orderTracker = new HashMap<>();
@@ -124,33 +139,48 @@ public class FlowGraphEventStream {
     }
 
 
-    List<String> unmarshallOrderManagerEdgeEvent(String inp)
-     {
+    private String extractOrderType(String inp) {
 
-         String orderTypeRegex = "eventType[ ]*=[ ]*\\\"([^\\\"]*)\\\"";
-         Pattern orderTypePattern = Pattern.compile(orderTypeRegex);
-         Matcher orderTypeMatcher = orderTypePattern.matcher(inp);
+        Matcher orderTypeMatcher = ORDER_TYPE_PATTERN.matcher(inp);
+        orderTypeMatcher.find();
+        return orderTypeMatcher.group(1);
+
+    }
+
+    private String extractOrderNumberFromLink(String inp){
+
+        Matcher orderLinkMatcher = ORDER_LINK_PATTERN.matcher(inp);
+        orderLinkMatcher.find();
+        Matcher orderNumberFromLinkMatcher = ORDER_NUMBER_FROM_LINK_PATTERN.matcher(orderLinkMatcher.group(1));
+        orderNumberFromLinkMatcher.find();
+
+        return orderNumberFromLinkMatcher.group(1);
+
+    }
+
+    private String extractOrderNumber(String inp){
+
+        Matcher orderNumberMatcher = ORDER_NUMBER_PATTERN.matcher(inp);
+
+        if(!orderNumberMatcher.find()){
+            return extractOrderNumberFromLink(inp);
+        }
+        else {
+            return orderNumberMatcher.group(1);
+        }
+    }
+
+    List<String> unmarshallOrderManagerEdgeEvent(String inp) {
 
 
-         String orderNumberRegex = "<orderNumber>([^<]*)";
-         Pattern orderNumberPattern = Pattern.compile(orderNumberRegex);
-         Matcher orderNumberMatcher = orderNumberPattern.matcher(inp);
-
-
-        String caseAnalysis = "", orderNumber = "";
-
-         if(orderNumberMatcher.find() && orderTypeMatcher.find()){
-             caseAnalysis = orderTypeMatcher.group(1);
-             orderNumber = orderNumberMatcher.group(1);
-
-         }
-
+        String caseAnalysis = extractOrderType(inp);
+        String orderNumber = extractOrderNumber(inp);
 
         String newStateTarget = forwardingMap.get(caseAnalysis);
 
-         if(newStateTarget == null){
+        if (newStateTarget == null) {
             newStateTarget = DEFAULT_STATE;
-         }
+        }
 
 
         Tuple<String, String> p = orderTracker.get(orderNumber);
