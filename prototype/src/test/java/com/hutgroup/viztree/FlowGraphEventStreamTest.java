@@ -167,10 +167,6 @@ public class FlowGraphEventStreamTest extends TestCase {
         return null;
     }
 
-    private void send(String msg) {
-
-    }
-
     public void test_deserialize_new_order_request_message() throws FileNotFoundException {
         eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
 
