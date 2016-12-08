@@ -6,6 +6,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.transport.stomp.Stomp;
 import org.apache.activemq.transport.tcp.ExceededMaximumConnectionsException;
 import org.jgrapht.event.FlowGraphEdgeChangeEvent;
 
@@ -76,9 +77,8 @@ public class FlowGraphEventStreamTest extends TestCase {
             "    <link rel=\"order\" href=\"http://ordermanager.st.io.thehut.local:8080/OrderManager/order/CatTest303227\" mediaType=\"application/vnd.thehutgroup.com+xml\"/>\n" +
             "    <shipmentLink rel=\"shipment\" href=\"http://sherlock.st.io.thehut.local:8080/sherlock/shipment/15860117\" mediaType=\"application/vnd.thehutgroup.com+xml\"/>\n" +
             "</releaseRequest>";
-   // private static final String RESERVATION_REQUEST = "";
+    // private static final String RESERVATION_REQUEST = "";
     //private static final String RESERVATION_REQUEST = "";
-
 
 
     private static final String ORDER_EVENT_PACKAGE_NAME = "com.hutgroup.viztree.orderevents";
@@ -90,36 +90,37 @@ public class FlowGraphEventStreamTest extends TestCase {
     }
 
     @Override
-    public void setUp(){
-       eventStream = null; //new FlowGraphEventStream(initActiveMQConsumer(), initGraph(), initUnmarshaller());
-    }
+    public void setUp() {}
 
     public static Test suite() {
-        return new TestSuite(AppTest.class);
+        return new TestSuite(FlowGraphEventStreamTest.class);
     }
 
     public void testSendMessage() throws Exception {
+
         //send(NEW_ORDER_REQUEST_XML);
         //eventStream.stream().allMatch((es) -> isNewOrderRequestTransition(es));
 
     }
 
     public void testDeserializeMessage() {
+        Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
+        eventStream = new FlowGraphEventStream(pair._1, pair._2, initUnmarshaller());
+
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_ORDER_REQUEST_XML);
         assertEquals(output.get(1), "2");
     }
 
 
-
-    private void send(String a){
+    private void send(String a) {
         throw new RuntimeException("Unimplemented");
     }
 
-    private boolean isNewOrderRequestTransition(List<FlowGraphEdgeChangeEvent> es){
+    private boolean isNewOrderRequestTransition(List<FlowGraphEdgeChangeEvent> es) {
         throw new RuntimeException("Unimplemented");
     }
 
-    public FlowGraph initGraph(){
+    private static Tuple<MockMessageConsumer, FlowGraph> initGraph() {
 
         FlowGraph graph = new FlowGraph();
         graph.addGraphListener(new FlowGraphListener());
@@ -225,10 +226,24 @@ public class FlowGraphEventStreamTest extends TestCase {
         FlowGraphEdge e21 = graph.addEdge(v1, v11);
         graph.setEdgeWeight(e19, 1);
 
+        //----------------End of definition of the graph ----------------------------------
 
-        return graph;
 
+        List<String> msgs = new LinkedList<>();
+        msgs.add(NEW_ORDER_REQUEST_XML);
+        msgs.add(NEW_ORDER_REQUEST_XML_2);
+        msgs.add(RESERVATION_RESPONSE);
+        msgs.add(RESERVATION_REQUEST);
+        msgs.add(RELEASE_REQUEST);
+        msgs.add(NEW_INVOICE_REQUEST );
+        msgs.add(RELEASE_REQUEST_2);
+
+        Tuple<MockMessageConsumer, FlowGraph> pair
+                = new Tuple<>(new MockMessageConsumer(msgs), graph);
+
+        return pair;
     }
+
     private static MessageConsumer initActiveMQConsumer() {
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
@@ -260,4 +275,5 @@ public class FlowGraphEventStreamTest extends TestCase {
         }
         return null;
     }
+
 }

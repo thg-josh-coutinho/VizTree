@@ -51,31 +51,7 @@ public class AppTest
     }
 
 
-    private static class MockMessageConsumer {
-        int counter;
-        List<FlowGraphEdgeChangeEvent> messages;
 
-        public MockMessageConsumer(List<FlowGraphEdgeChangeEvent> l) {
-            this.messages = l;
-        }
-
-        private List<FlowGraphEdgeChangeEvent> nextUpdate() {
-            List<FlowGraphEdgeChangeEvent> event = new LinkedList<>();
-            event.add(messages.get((counter++) % messages.size()));
-            for(FlowGraphEdgeChangeEvent e : event){
-                e.setNewWeight(Math.random()*30);
-            }
-            return event;
-        }
-
-        public Stream<List<FlowGraphEdgeChangeEvent>> stream() {
-
-            return Stream.iterate(nextUpdate(),
-                    prev -> nextUpdate());
-        }
-
-
-    }
 
 
     private static Tuple<Stream<List<FlowGraphEdgeChangeEvent>>, FlowGraph> initGraph() {
@@ -295,7 +271,7 @@ public class AppTest
         //----------------End of definition of the queue ----------------------------------
 
         Tuple<Stream<List<FlowGraphEdgeChangeEvent>>, FlowGraph> pair
-                = new Tuple<>(new MockMessageConsumer(updateQueue).stream(), graph);
+                = new Tuple<>(new MockStream(updateQueue).stream(), graph);
 
         return pair;
     }
