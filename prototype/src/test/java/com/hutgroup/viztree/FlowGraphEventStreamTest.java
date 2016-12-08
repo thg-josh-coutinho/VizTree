@@ -2,6 +2,7 @@ package com.hutgroup.viztree;
 
 import com.hutgroup.viztree.graph.FlowGraphListener;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import jdk.nashorn.internal.runtime.regexp.joni.ScanEnvironment;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -16,6 +17,10 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.*;
 
@@ -84,13 +89,16 @@ public class FlowGraphEventStreamTest extends TestCase {
     private static final String ORDER_EVENT_PACKAGE_NAME = "com.hutgroup.viztree.orderevents";
     private static final String QUEUE_NAME = "SampleQueue";
     FlowGraphEventStream eventStream;
+    Map<String, String> configMap;
 
     public FlowGraphEventStreamTest(String testName) {
         super(testName);
     }
 
     @Override
-    public void setUp() {}
+    public void setUp() throws FileNotFoundException{
+        configMap = readConfigMap();
+    }
 
     public static Test suite() {
         return new TestSuite(FlowGraphEventStreamTest.class);
@@ -103,12 +111,33 @@ public class FlowGraphEventStreamTest extends TestCase {
 
     }
 
-    public void testDeserializeMessage() {
+    private Map<String, String> readConfigMap() throws FileNotFoundException {
+
+        Map<String, String> result = new HashMap<>();
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        Scanner configFile = new Scanner(
+                    new FileInputStream(
+                            new File(
+                                    classLoader.getResource("ForwardingMap.txt").getFile())
+                    )
+            );
+
+        while(configFile.hasNext()){
+            result.put(configFile.next(), configFile.next());
+        }
+
+        return result;
+
+    }
+
+    public void testDeserializeMessage() throws FileNotFoundException {
         Tuple<MockMessageConsumer, FlowGraph> pair = initGraph();
-        eventStream = new FlowGraphEventStream(pair._1, pair._2);
+
+        eventStream = new FlowGraphEventStream(pair._1, pair._2, configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_ORDER_REQUEST_XML);
-        assertEquals("2", output.get(1));
+        assertEquals("2", output.get(3));
     }
 
 

@@ -35,16 +35,17 @@ import com.josh.utils.StringUtils;
 public class FlowGraphEventStream {
 
     public static final int EVENT_DELAY = 200;
-
+    public static final String DEFAULT_STATE = "1";
     MessageConsumer consumer;
     FlowGraph graph;
     Map<String, FlowGraphEdge> edgeMap;
     Map<String, Tuple<String, String>> orderTracker;
+    Map<String, String> forwardingMap;
 
-    public FlowGraphEventStream(MessageConsumer consumer, FlowGraph graph) {
+    public FlowGraphEventStream(MessageConsumer consumer, FlowGraph graph, Map<String, String> forwardingMap) {
         edgeMap = new HashMap<>();
         orderTracker = new HashMap<>();
-
+        this.forwardingMap = forwardingMap;
         this.consumer = consumer;
         this.graph = graph;
 
@@ -145,59 +146,12 @@ public class FlowGraphEventStream {
          }
 
 
-        String newStateTarget;
+        String newStateTarget = forwardingMap.get(caseAnalysis);
 
-        // Same events correspond to different edges
-        if (caseAnalysis.equals("CancelOrderRequest")) {
-            newStateTarget = "11";
-        }
-        else if (caseAnalysis.equals("ChargeInvoiceRequest")) {
-            newStateTarget = "2";
-        }
-        else if (caseAnalysis.equals("DespatchEvent")) {
-            newStateTarget = "5";
-        }
-        else if (caseAnalysis.equals("FraudCheckRequest")) {
-            newStateTarget = "3";
-        }
-        else if (caseAnalysis.equals("FraudStatusUpdate")) {
-            newStateTarget = "3";
-        }
-        else if (caseAnalysis.equals("FulfilmentRequest")) {
-            newStateTarget = "3";
-        }
-        else if (caseAnalysis.equals("InvoiceFailureEvent")) {
-            newStateTarget = "8";
-        }
-        else if (caseAnalysis.equals("InvoiceRetryEvent")) {
-            newStateTarget = "8";
-        }
-        else if (caseAnalysis.equals("InvoiceSuccessEvent")) {
-            newStateTarget = "7";
-        }
-        else if (caseAnalysis.equals("NewInvoiceRequest")) {
-            newStateTarget = "2";
-        }
-        else if (caseAnalysis.equals("NewOrderRequest")) {
-            newStateTarget = "2";
-        }
-        else if (caseAnalysis.equals("PayresolveRefulfilmentRequest")) {
-            newStateTarget = "1";
-        }
-        else if (caseAnalysis.equals("RefundOrderRequest")) {
-            newStateTarget = "6";
-        }
-        else if (caseAnalysis.equals("ReleaseRequest")) {
-            newStateTarget = "4";
-        }
-        else if (caseAnalysis.equals("ReplaceOrderRequest")) {
-            newStateTarget = "1";
-        }
-        else if (caseAnalysis.equals("ReservationRequest")) {
-            newStateTarget = "3";
-        } else {
-            newStateTarget = "12";
-        }
+         if(newStateTarget == null){
+            newStateTarget = DEFAULT_STATE;
+         }
+
 
         Tuple<String, String> p = orderTracker.get(orderNumber);
 
