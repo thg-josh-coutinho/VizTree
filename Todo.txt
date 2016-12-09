@@ -1,22 +1,37 @@
-* Get the code running in intellij
-.* Create a readme for this project
-. , How to build it
-.  . java command?
-. , How to set it up
-.  . Config files (active mq endpoints)
-. , How to run it
-.  . How do you run the tests
-.  . How to start up the server
-
-
 * Get it to work with activemq
 .. First write the deserializer locally on your own machine
 .. Write a test for the deserealizer that sends a message and then polls a message
-.. Setup active mq on your own machine
+. , Get the deserializing tests to run
+.  . What is this cannot find AbstractHttpMessage error that I seem to be getting
+.   , Setup active mq on your own machine
+.    . test it out locally to see if this is working
+.     , What is Transport Factory, where does it get initialized?
+.      . gets initialized at line 146
+.      . What is transport factory finder
+.       , Its path is META-INF/services/org/apache/activemq/transport
+.        . Search inside VizTree
+.        . Search inside maven
+.        . Search inside activemq jar inside the libs directory
+.        . Watch out for the generated sources directory
+.         , This contains class names for the factories that they probably uses for different schemes
+.          . 
+. , Be able to run all of the tests in a class
+. , Be able to run all of the tests in the test directory
+. , Create a test-suite of tests to run, that is only the tests that you want to run (look into test groups)
+.. Need to add more test cases - current suite of test cases is rather empty don't you think?
+.. Need the test to actually startup the web-server
+.. Need to actually use selenium to test whether or not the ui is appropriate.
+.. Need to somehow setup a VPN so that I can access stuff
+
+.. Figure out where the broadcasting print statements are coming from on your machine and remove them because they irritate me.
+. , Seems to come from the initGraph function
+.  . Step through this to get a better idea of what is going inside it.
 .. Should be able to parse active mq messages
 .. Check whether it deserializes it correctly
 * Flow calculation
 .. Node should become red when the flow along a particular node exceeds some threshold
+* Comment the code as well
+
 * Adding unit tests
 .. Add unit tests for the back end
 .. Concentrate on the flow 
@@ -96,3 +111,25 @@ Caused by: java.lang.ClassNotFoundException: org.junit.runner.notification.RunLi
 . , Check that the console is recieving messages
 . , Check that the ui is responding appropriately
 .* Organize meeting with ali to start forwarding events from event hub.
+.. Get the test to run
+. , It runs the apptest
+. , It is unable to allocate sufficient memory on the heap
+.. Upgrade to a 64 bit jvm
+.. Remove all uses of the unmarshaller
+. , Unable to parse messages:
+.  . Generated unmarshalling files are faulty?
+.  . Message is polluted
+.   , Creating a fake text message caused this problem to occur
+.    . Check that all functions that it exposes are exceptional other than the 
+. , Read the case analysis statements from a map
+.  . Initialise the map in the constructor
+.   , How do I pipe the configuration file name through my system
+.  . What is the format of 
+.  . Need to add the default state
+.. Write the code to delete a queue
+.. Figure out where you set the address of the queue that you are going to write to
+. , This should be done before initializing the activeMQConsumer
+.. Need to fix the address already in use thing.
+. , Put the part that connects to some server inside the setup portion
+
+

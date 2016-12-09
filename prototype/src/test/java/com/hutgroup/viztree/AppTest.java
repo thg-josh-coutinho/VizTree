@@ -41,13 +41,12 @@ public class AppTest
         return new TestSuite(AppTest.class);
     }
 
-    public void testApp() throws  Exception {
+    public void test_10000_messages() throws  Exception {
 
         Tuple<Stream<List<FlowGraphEdgeChangeEvent>>, FlowGraph> t = initGraph();
-
         App app = new App(t._1, t._2);
+        app.runApp(10000);
 
-        app.runApp();
     }
 
 

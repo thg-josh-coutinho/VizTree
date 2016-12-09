@@ -1,6 +1,7 @@
 package com.hutgroup.viztree;
 
 import com.hutgroup.viztree.graph.FlowGraphListener;
+import com.hutgroup.viztree.graph.MockFlowGraphListener;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import jdk.nashorn.internal.runtime.regexp.joni.ScanEnvironment;
 import junit.framework.Test;
@@ -22,6 +23,7 @@ import java.util.*;
 import java.util.stream.*;
 
 import com.josh.utils.*;
+import org.jgrapht.event.IFlowGraphListener;
 import org.jgrapht.graph.FlowGraph;
 import org.jgrapht.graph.FlowGraphEdge;
 import org.jgrapht.graph.FlowGraphNode;
@@ -90,14 +92,16 @@ public class FlowGraphEventStreamTest extends TestCase {
     FlowGraphEventStream eventStream;
     Map<String, String> configMap;
     Session session;
+    FlowGraph graph;
 
     public FlowGraphEventStreamTest(String testName) {
         super(testName);
     }
 
     @Override
-    public void setUp() throws FileNotFoundException{
+    public void setUp() throws FileNotFoundException {
         configMap = readConfigMap();
+        graph = initGraph(new MockFlowGraphListener());
     }
 
     public static Test suite() {
@@ -106,12 +110,11 @@ public class FlowGraphEventStreamTest extends TestCase {
 
     public void test_send_message() throws JMSException {
 
-
         session = initActiveMQSession();
         Destination destination = session.createQueue(QUEUE_NAME);
         MessageProducer producer = session.createProducer(destination);
 
-        eventStream = new FlowGraphEventStream(session.createConsumer(destination), initGraph(), configMap);
+        eventStream = new FlowGraphEventStream(session.createConsumer(destination), graph, configMap);
 
         exhaustQueue();
 
@@ -126,7 +129,6 @@ public class FlowGraphEventStreamTest extends TestCase {
 
         producer.send(session.createTextMessage(NEW_INVOICE_REQUEST));
         eventStream.stream().forEach((es) -> isNewInvoiceRequestTransition(es));
-
 
     }
 
@@ -168,7 +170,7 @@ public class FlowGraphEventStreamTest extends TestCase {
     }
 
     public void test_deserialize_new_order_request_message() throws FileNotFoundException {
-        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
+        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), graph, configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_ORDER_REQUEST_XML);
         assertEquals("2", output.get(3));
@@ -178,14 +180,14 @@ public class FlowGraphEventStreamTest extends TestCase {
     }
 
     public void test_deserialize_reservation_request() throws FileNotFoundException {
-        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
+        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), graph, configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(RESERVATION_REQUEST);
         assertEquals("3", output.get(3));
     }
 
     public void test_deserialize_new_invoice_request() throws FileNotFoundException {
-        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
+        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), graph, configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(NEW_INVOICE_REQUEST);
         assertEquals("2", output.get(3));
@@ -193,7 +195,7 @@ public class FlowGraphEventStreamTest extends TestCase {
 
     public void test_deserialize_release_request() throws FileNotFoundException {
 
-        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), initGraph(), configMap);
+        eventStream = new FlowGraphEventStream(initMockMessageConsumer(), graph, configMap);
 
         List<String> output = eventStream.unmarshallOrderManagerEdgeEvent(RELEASE_REQUEST);
         assertEquals("4", output.get(3));
@@ -223,10 +225,10 @@ public class FlowGraphEventStreamTest extends TestCase {
     }
 
 
-    private static FlowGraph initGraph() {
+    private static FlowGraph initGraph(IFlowGraphListener listener) {
 
         FlowGraph graph = new FlowGraph();
-        graph.addGraphListener(new FlowGraphListener());
+        graph.addGraphListener(listener);
         FlowGraphNode va = new FlowGraphNode("a");
         FlowGraphNode v1 = new FlowGraphNode("1");
         FlowGraphNode v2 = new FlowGraphNode("2");

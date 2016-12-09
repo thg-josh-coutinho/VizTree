@@ -48,13 +48,21 @@ public class App {
      * Updates the graph with each 'graphUpdate' pulled from the
      * MessageConsumer stream.
      */
-    public void runApp() throws Exception // Remove this throws exception
+    public void runApp(int numberOfMessages) throws Exception // Remove this throws exception
     {
-        edgeEventStream.forEach((graphUpdate) -> {
-            for (FlowGraphEdgeChangeEvent upd : graphUpdate) {
-                update(graph, upd);
-            }
-        });
+        if (numberOfMessages >= 0) {
+            edgeEventStream.limit(numberOfMessages).forEach((graphUpdate) -> {
+                for (FlowGraphEdgeChangeEvent upd : graphUpdate) {
+                    update(graph, upd);
+                }
+            });
+        } else {
+            edgeEventStream.forEach((graphUpdate) -> {
+                for (FlowGraphEdgeChangeEvent upd : graphUpdate) {
+                    update(graph, upd);
+                }
+            });
+        }
     }
 
 
