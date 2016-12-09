@@ -27,7 +27,7 @@ import org.jgrapht.event.IFlowGraphListener;
 import org.jgrapht.graph.FlowGraph;
 import org.jgrapht.graph.FlowGraphEdge;
 import org.jgrapht.graph.FlowGraphNode;
-
+import org.apache.http.client.methods.HttpPost;
 /**
  * Created by CoutinhoJ on 07/12/2016.
  */
@@ -86,8 +86,8 @@ public class FlowGraphEventStreamTest extends TestCase {
 
 
     private static final String QUEUE_NAME = "SampleQueue";
-    private static final String BROKER_ADDRESS = "http://activemq1.st.thehutgroup.local:8161/admin/queues.jsp";
-
+    private static final String STABLE_BROKER_ADDRESS = "http://activemq1.st.thehutgroup.local:8161";
+    private static final String LOCAL_BROKER_ADDRESS = "http://localhost:8161";
 
     FlowGraphEventStream eventStream;
     Map<String, String> configMap;
@@ -155,9 +155,9 @@ public class FlowGraphEventStreamTest extends TestCase {
 
     private Session initActiveMQSession() {
         try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_ADDRESS);
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(LOCAL_BROKER_ADDRESS);
 
-            Connection connection = connectionFactory.createConnection();
+            Connection connection = connectionFactory.createConnection("admin", "admin");
             connection.start();
 
             return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);

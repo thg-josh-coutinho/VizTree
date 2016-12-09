@@ -14,15 +14,49 @@
 .        . Search inside activemq jar inside the libs directory
 .        . Watch out for the generated sources directory
 .         , This contains class names for the factories that they probably uses for different schemes
-.          . 
-. , Be able to run all of the tests in a class
+.       , What's that register changes inside the class
+.     , It's unable to find this HttpClientTransport
+.      . Intuition is that
+.       , HttpTransportFactory doesn't create HttpClientTransport (although it should?)
+.        . Where does HttpTransportFactory get used
+.         , Its just loaded and an instance is returned, where is that instance supposed to be used
+.         , There was a weird thing going on with the skipping of the statements to load that hashmap
+.          . Are we looking at a different version of the hashmap in some manner
+.       , Unable to find HttpClientTransport
+.        . where is httpclienttransport located
+.         , org.apache.activemq.activemq-all
+.          . org.apache.activemq.transport.http
+.         , Check whether you include the right dependency in your pom file
+.          . check the actual jar inside the m2 directory
+.         , Look at the class that uses HttpClientTransport
+.          . Check whether they have imported the correct class
+.           , In particular check the import statement that imports this class
+.           , Then check whether the jar that houses that corresponding import statement contains the class
+.           , Check if there are multiple jars containing the same groupId
+.            . If there are (duplicate versions of the same package
+.             , Then you should delete the oldest package?
+.             , You should delete the 
+.        . Try and import this class inside your test to see if it makes a difference
+.         , Try and create an instance inside your test class and see if it fails there
+.        . Which are the loaded jars containing the classes that are supposed to be loaded
+.        . Which are the loaded classes
+.       , What is the TextWireFormat
+.        . What is this wireformat that I keep hearing about
+.         , related to the encoding of values as they are sent on the wire.
+. , DEMO: Be able to run all of the tests in a class
+.  . Run the non-browser tests
+.  . Run the browser tests
+.   , How do you display the feedback from the browser tests
+.  . Run a demo directing it at activemq1
+.  . Setup a virtual machine on your laptop, deploy it to that virtual machine
+.   , build it, run it, and then visit a page with the address of your virtual machine
+.   , Then show them the output on that be like BLAM!
 . , Be able to run all of the tests in the test directory
 . , Create a test-suite of tests to run, that is only the tests that you want to run (look into test groups)
 .. Need to add more test cases - current suite of test cases is rather empty don't you think?
 .. Need the test to actually startup the web-server
 .. Need to actually use selenium to test whether or not the ui is appropriate.
 .. Need to somehow setup a VPN so that I can access stuff
-
 .. Figure out where the broadcasting print statements are coming from on your machine and remove them because they irritate me.
 . , Seems to come from the initGraph function
 .  . Step through this to get a better idea of what is going inside it.
@@ -131,5 +165,7 @@ Caused by: java.lang.ClassNotFoundException: org.junit.runner.notification.RunLi
 . , This should be done before initializing the activeMQConsumer
 .. Need to fix the address already in use thing.
 . , Put the part that connects to some server inside the setup portion
-
-
+.. Create the constants to match on the queue
+.. Write the code to exhaust a queue
+.. Write the code to send a message
+.. Write the code that performs the predicate checks on all of the contents

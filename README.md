@@ -30,3 +30,9 @@ flowvisualization.om
 
 
 This currently also needs to be added to AppTest in the if case block under the deserializeEvent section.
+
+
+Testing:
+========
+Stable activemq: activemq1.st.thehutgroup.local:8161/admin/queues.jsp
+Live activemq: gblmsg005.thehut.local:8161/admin/queues.jsp
