@@ -155,9 +155,9 @@ public class FlowGraphEventStreamTest extends TestCase {
 
     private Session initActiveMQSession() {
         try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(LOCAL_BROKER_ADDRESS);
 
-            Connection connection = connectionFactory.createConnection("admin", "admin");
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(LOCAL_BROKER_ADDRESS);
+            Connection connection = connectionFactory.createQueueConnection("admin", "admin");
             connection.start();
 
             return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
