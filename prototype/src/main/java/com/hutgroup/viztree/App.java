@@ -1,16 +1,7 @@
 package com.hutgroup.viztree;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.TextMessage;
-import javax.jms.Session;
-
 import javax.xml.bind.*;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
 
 import java.util.stream.*;
 import java.util.function.*;
