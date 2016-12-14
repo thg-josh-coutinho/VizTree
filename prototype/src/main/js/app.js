@@ -588,8 +588,9 @@ if (!String.prototype.format) {
 }
 
 
-
+// Need to change this to a proper host (It may not be simply on the localhost
 var socket =  io.connect('http://localhost:9092');
+
 socket.on('flowevent', function(data) {
     console.log("Recieved a chat event from the server:");
     console.log(data);
@@ -624,6 +625,20 @@ socket.on('flowevent', function(data) {
 	    .attr("d", path)	
 	    .style("stroke", LINK_COLOR)
 	    .style("opacity", OPACITY.LINK_IN_CHECK);
+    }
+
+});
+
+
+
+function isRed(val) {
+    return true;
+}
+
+socket.on('test_control',function(data) {
+
+    if(data.test_function == "isRed"){
+	socket.emit('test_control', { 'testResult':isRed(data.param) });
     }
 
 });
