@@ -46,131 +46,134 @@ public class AppTest
     App app;
     FlowGraph graph;
 
+    public static final int OVERFLOW_WEIGHT = 15;
+    public static final int PERMISSABLE_WEIGHT = 10;
+
     @Override
     public void setUp() {
-        //initApp();
+        initApp();
         startUIServer();
     }
 
 
     public void test_ui_NewInvoiceRequest() {
-        overflowEdge(FlowEventObject.NEW_INVOICE_REQUEST_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.NEW_INVOICE_REQUEST_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_ReservationRequest() {
-        overflowEdge(FlowEventObject.RESERVATION_REQUEST_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.RESERVATION_REQUEST_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_ChargeInvoiceRequest() {
-        overflowEdge(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_DespatchEvent() {
-        overflowEdge(FlowEventObject.DESPATCH_EVENT_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.DESPATCH_EVENT_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_InvoiceFailureEvent() {
-        overflowEdge(FlowEventObject.INVOICE_FAILURE_EVENT_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.INVOICE_FAILURE_EVENT_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_CancelOrderRequest() {
-        overflowEdge(FlowEventObject.CANCEL_ORDER_REQUEST_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.CANCEL_ORDER_REQUEST_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_FraudCheckRequest() {
-        overflowEdge(FlowEventObject.FRAUD_CHECK_REQUEST_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.FRAUD_CHECK_REQUEST_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_FulfillmentRequest() {
-        overflowEdge(FlowEventObject.FULFILMENT_REQUEST_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.FULFILMENT_REQUEST_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_FraudStatusUpdate() {
-        overflowEdge(FlowEventObject.FRAUD_STATUS_UPDATE_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.FRAUD_STATUS_UPDATE_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_ReplaceOrderRequest() {
-        overflowEdge(FlowEventObject.REPLACE_ORDER_REQUEST_STRING);
-        assert (isRed(testMessage()));
+        overflowEdge(graph.getEdgeByName(FlowEventObject.REPLACE_ORDER_REQUEST_STRING));
+        assert ((Boolean)testMessageIsRed().getTestResult());
     }
 
     public void test_ui_Reset_NewInvoiceRequest() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.NEW_INVOICE_REQUEST_STRING);
-        thinFlowEdge(FlowEventObject.NEW_INVOICE_REQUEST_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.NEW_INVOICE_REQUEST_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.NEW_INVOICE_REQUEST_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_ReservationRequest() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.RESERVATION_REQUEST_STRING);
-        thinFlowEdge(FlowEventObject.RESERVATION_REQUEST_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.RESERVATION_REQUEST_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.RESERVATION_REQUEST_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_ChargeInvoiceRequest() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING);
-        thinFlowEdge(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_DespatchEvent() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.DESPATCH_EVENT_STRING);
-        thinFlowEdge(FlowEventObject.DESPATCH_EVENT_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.DESPATCH_EVENT_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.DESPATCH_EVENT_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_InvoiceFailureEvent() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.INVOICE_FAILURE_EVENT_STRING);
-        thinFlowEdge(FlowEventObject.INVOICE_FAILURE_EVENT_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.INVOICE_FAILURE_EVENT_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.INVOICE_FAILURE_EVENT_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_CancelOrderRequest() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.CANCEL_ORDER_REQUEST_STRING);
-        thinFlowEdge(FlowEventObject.CANCEL_ORDER_REQUEST_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.CANCEL_ORDER_REQUEST_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.CANCEL_ORDER_REQUEST_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_FraudCheckRequest() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.FRAUD_CHECK_REQUEST_STRING);
-        thinFlowEdge(FlowEventObject.FRAUD_CHECK_REQUEST_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.FRAUD_CHECK_REQUEST_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.FRAUD_CHECK_REQUEST_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_FulfillmentRequest() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.FULFILMENT_REQUEST_STRING);
-        thinFlowEdge(FlowEventObject.FULFILMENT_REQUEST_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.FULFILMENT_REQUEST_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.FULFILMENT_REQUEST_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_FraudStatusUpdate() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.FRAUD_STATUS_UPDATE_STRING);
-        thinFlowEdge(FlowEventObject.FRAUD_STATUS_UPDATE_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.FRAUD_STATUS_UPDATE_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.FRAUD_STATUS_UPDATE_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_ui_Reset_ReplaceOrderRequest() {
-        assert (isBlue(testMessage()));
-        overflowEdge(FlowEventObject.REPLACE_ORDER_REQUEST_STRING);
-        thinFlowEdge(FlowEventObject.REPLACE_ORDER_REQUEST_STRING);
-        assert (isBlue(testMessage()));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
+        overflowEdge(graph.getEdgeByName(FlowEventObject.REPLACE_ORDER_REQUEST_STRING));
+        thinFlowEdge(graph.getEdgeByName(FlowEventObject.REPLACE_ORDER_REQUEST_STRING));
+        assert ((Boolean)testMessageIsBlue().getTestResult());
     }
 
     public void test_10000_messages() throws Exception {
@@ -180,7 +183,7 @@ public class AppTest
     private void initApp() {
 
         graph = new FlowGraph();
-        graph.addGraphListener(new FlowGraphListener());
+        //graph.addGraphListener(new FlowGraphListener());
         FlowGraphNode va = new FlowGraphNode("a");
         FlowGraphNode v1 = new FlowGraphNode("1");
         FlowGraphNode v2 = new FlowGraphNode("2");
@@ -401,24 +404,31 @@ public class AppTest
     }
 
 
-    public void overflowEdge(String edgeName) {
+
+
+    public void overflowEdge(FlowGraphEdge edge) {
+        graph.setEdgeWeight(edge, 0);
+
+        edge.resetFlow();
+        graph.setEdgeWeight(edge, OVERFLOW_WEIGHT);
+
     }
 
-    public void thinFlowEdge(String edgeName) {
-    }
+    public void thinFlowEdge(FlowGraphEdge edge) {
+        graph.setEdgeWeight(edge, 0);
 
-    public boolean isRed(Object o) {
-        return true;
-    }
-
-    public boolean isBlue(Object o) {
-        return true;
+        edge.resetFlow();
+        graph.setEdgeWeight(edge, PERMISSABLE_WEIGHT);
     }
 
     public void startUIServer() {
     }
 
-    public Object testMessage() {
-        return null;
+    public TestControlMessageObject testMessageIsBlue() {
+        return new TestControlMessageObject("isBlue", true);
+    }
+
+    public TestControlMessageObject testMessageIsRed() {
+        return new TestControlMessageObject("isRed", true);
     }
 }

@@ -9,10 +9,10 @@ public class TestControlMessageObject {
     public TestControlMessageObject() {
     }
 
-    public TestControlMessageObject(String f, String t) {
+    public TestControlMessageObject(String f, Object t) {
         super();
-	testFunction = f;
-	testResult = t;
+        testFunction = f;
+        testResult = t;
     }
 
     public String getTestFunction() {
