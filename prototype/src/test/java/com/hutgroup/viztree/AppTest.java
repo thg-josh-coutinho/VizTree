@@ -16,6 +16,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.util.*;
 import java.util.stream.*;
+
 import com.josh.utils.*;
 import org.jgrapht.graph.FlowGraph;
 import org.jgrapht.graph.FlowGraphEdge;
@@ -44,63 +45,136 @@ public class AppTest
 
     App app;
     FlowGraph graph;
+
     @Override
-    public void setUp(){
-       // initApp();
+    public void setUp() {
+        //initApp();
+        startUIServer();
     }
 
 
-    public void test_ui_NewInvoiceRequest(){
+    public void test_ui_NewInvoiceRequest() {
         overflowEdge(FlowEventObject.NEW_INVOICE_REQUEST_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_ReservationRequest(){
+    public void test_ui_ReservationRequest() {
         overflowEdge(FlowEventObject.RESERVATION_REQUEST_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_ChargeInvoiceRequest(){
+    public void test_ui_ChargeInvoiceRequest() {
         overflowEdge(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_DespatchEvent(){
+    public void test_ui_DespatchEvent() {
         overflowEdge(FlowEventObject.DESPATCH_EVENT_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_InvoiceFailureEvent(){
+    public void test_ui_InvoiceFailureEvent() {
         overflowEdge(FlowEventObject.INVOICE_FAILURE_EVENT_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_CancelOrderRequest(){
+    public void test_ui_CancelOrderRequest() {
         overflowEdge(FlowEventObject.CANCEL_ORDER_REQUEST_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_FraudCheckRequest(){
+    public void test_ui_FraudCheckRequest() {
         overflowEdge(FlowEventObject.FRAUD_CHECK_REQUEST_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_FulfillmentRequest(){
+    public void test_ui_FulfillmentRequest() {
         overflowEdge(FlowEventObject.FULFILMENT_REQUEST_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_FraudStatusUpdate(){
+    public void test_ui_FraudStatusUpdate() {
         overflowEdge(FlowEventObject.FRAUD_STATUS_UPDATE_STRING);
         assert (isRed(testMessage()));
     }
 
-    public void test_ui_ReplaceOrderRequest(){
+    public void test_ui_ReplaceOrderRequest() {
         overflowEdge(FlowEventObject.REPLACE_ORDER_REQUEST_STRING);
         assert (isRed(testMessage()));
     }
-    public void test_10000_messages() throws  Exception {
-        //app.runApp(10000);
+
+    public void test_ui_Reset_NewInvoiceRequest() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.NEW_INVOICE_REQUEST_STRING);
+        thinFlowEdge(FlowEventObject.NEW_INVOICE_REQUEST_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_ReservationRequest() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.RESERVATION_REQUEST_STRING);
+        thinFlowEdge(FlowEventObject.RESERVATION_REQUEST_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_ChargeInvoiceRequest() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING);
+        thinFlowEdge(FlowEventObject.CHARGE_INVOICE_REQUEST_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_DespatchEvent() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.DESPATCH_EVENT_STRING);
+        thinFlowEdge(FlowEventObject.DESPATCH_EVENT_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_InvoiceFailureEvent() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.INVOICE_FAILURE_EVENT_STRING);
+        thinFlowEdge(FlowEventObject.INVOICE_FAILURE_EVENT_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_CancelOrderRequest() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.CANCEL_ORDER_REQUEST_STRING);
+        thinFlowEdge(FlowEventObject.CANCEL_ORDER_REQUEST_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_FraudCheckRequest() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.FRAUD_CHECK_REQUEST_STRING);
+        thinFlowEdge(FlowEventObject.FRAUD_CHECK_REQUEST_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_FulfillmentRequest() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.FULFILMENT_REQUEST_STRING);
+        thinFlowEdge(FlowEventObject.FULFILMENT_REQUEST_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_FraudStatusUpdate() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.FRAUD_STATUS_UPDATE_STRING);
+        thinFlowEdge(FlowEventObject.FRAUD_STATUS_UPDATE_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_ui_Reset_ReplaceOrderRequest() {
+        assert (isBlue(testMessage()));
+        overflowEdge(FlowEventObject.REPLACE_ORDER_REQUEST_STRING);
+        thinFlowEdge(FlowEventObject.REPLACE_ORDER_REQUEST_STRING);
+        assert (isBlue(testMessage()));
+    }
+
+    public void test_10000_messages() throws Exception {
+        //app.runApp();
     }
 
     private void initApp() {
@@ -322,14 +396,29 @@ public class AppTest
         Tuple<Stream<List<FlowGraphEdgeChangeEvent>>, FlowGraph> pair
                 = new Tuple<>(new MockStream(updateQueue).stream(), graph);
 
-        //app = new App(new MockStream(updateQueue).stream(), graph);
+        //app = new App(new MockStream(updateQueue).stream(), graph, 10000);
 
     }
 
 
-    public void overflowEdge(String edgeName){}
+    public void overflowEdge(String edgeName) {
+    }
 
-    public boolean isRed(Object o) { return true; }
+    public void thinFlowEdge(String edgeName) {
+    }
 
-    public Object testMessage() { return null; }
+    public boolean isRed(Object o) {
+        return true;
+    }
+
+    public boolean isBlue(Object o) {
+        return true;
+    }
+
+    public void startUIServer() {
+    }
+
+    public Object testMessage() {
+        return null;
+    }
 }

@@ -637,8 +637,8 @@ function isRed(val) {
 
 socket.on('test_control',function(data) {
 
-    if(data.test_function == "isRed"){
-	socket.emit('test_control', { 'testResult':isRed(data.param) });
+    if(data.testFunction == "isRed"){
+	socket.emit('testControl', { 'testResult':isRed(data.param) });
     }
 
 });

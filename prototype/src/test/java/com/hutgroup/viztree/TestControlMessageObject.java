@@ -3,27 +3,27 @@ package com.hutgroup.viztree;
 public class TestControlMessageObject {
 
 
-    private String functionName;
+    private String testFunction;
     private Object testResult;
 
     public TestControlMessageObject() {
     }
 
-    public FlowEventObject(String f, String t) {
+    public TestControlMessageObject(String f, String t) {
         super();
-	functionName = f;
+	testFunction = f;
 	testResult = t;
     }
 
-    public String getFunctionName() {
-        return functionName
+    public String getTestFunction() {
+        return testFunction;
     }
 
-    public void setFunctionName(String f) {
-        this.functionName = f;
+    public void setTestFunction(String f) {
+        this.testFunction = f;
     }
 
-    public String getTestResult() {
+    public Object getTestResult() {
         return testResult;
     }
 
