@@ -169,7 +169,7 @@ public class App {
         Map<String, String> result = new HashMap<>();
         Scanner configFile = null;
         try {
-            configFile = new Scanner(new FileInputStream(retrieveFile((String) properties.get("CONFIG_FILE"))));
+            configFile = new Scanner(new FileInputStream(retrieveFile((String) properties.get("FORWARDING_MAP"))));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.exit(1);
