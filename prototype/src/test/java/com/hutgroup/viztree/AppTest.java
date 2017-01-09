@@ -21,6 +21,7 @@ import com.josh.utils.*;
 import org.jgrapht.graph.FlowGraph;
 import org.jgrapht.graph.FlowGraphEdge;
 import org.jgrapht.graph.FlowGraphNode;
+import org.omg.PortableServer.THREAD_POLICY_ID;
 
 /**
  * Unit test for simple App.
@@ -422,13 +423,29 @@ public class AppTest
     }
 
     public void startUIServer() {
+        try {
+            Thread.sleep(1000);
+
+        }
+        catch (Exception e) {}
     }
 
     public TestControlMessageObject testMessageIsBlue() {
+
+        try {
+            Thread.sleep((int)(Math.random()*500));
+
+        }
+        catch (Exception e) {}
         return new TestControlMessageObject("isBlue", true);
     }
 
     public TestControlMessageObject testMessageIsRed() {
+        try {
+            Thread.sleep((int)(Math.random()*500));
+
+        }
+        catch (Exception e) {}
         return new TestControlMessageObject("isRed", true);
     }
 }
