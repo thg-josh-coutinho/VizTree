@@ -63,12 +63,41 @@
 .. Should be able to parse active mq messages
 .. Check whether it deserializes it correctly
 * Flow calculation
+.. First define flow
+. , Flow along an edge is the difference between the number of orders coming into an edge and the number of orders exiting an edge
+. , Flow along a node is the difference between the number of orders coming into the node and the number of orders leaving a node
+. , n -> e -> n' -> e' -> n''
+. , Either keep track of the nodes or the edges and you have the information for all of them.
+. , We care about the edges.
+.. Define an algorithm to track the flow
+. , Need a map keeping track of where the nodes are in the system
+. , We should keep a list of edges 
+. , We have a timer that goes off every 30 seconds
+.  . Inside the timer event:
+.   , For all of the edges e:
+.    . broadcast, f(e.flow, e.numberOfValues)
+.  . Inside the callback,
+.   , If outgoing decrease flow, if incoming increase flow
+.   , Modify the total count within a node accordingly as well
+.    . Pre condition is that the total number of elements should never be below 
+. , Going to have to add the flow information to the nodes
+.  . 
+. , Going to have to add a condition to the front end to recognize flow
 .. Node should become red when the flow along a particular node exceeds some threshold
 * Comment the code as well
-
+. , Actually it should be the opposite, it becomes red when the flow falls below some threshold
 * Adding unit tests
 .. Add unit tests for the back end
 .. Concentrate on the flow 
+* Need a better system for specifying how orders are routed
+.. Modify the configuration file according to the new grammar
+. , Something along the lines of
+. , <Order Type> <Previous State> <New State>
+.. Modify the test that reads this configuration file
+.. Modify the actual applcation that uses this configuration file
+
+* Need to write a driver for the program as well
+
 * Writing regression tests to demonstrate that the UI reflects the status of the order pipeline
 .. Selenium for performing these tests
 . , Setup a sample selenium test
@@ -84,6 +113,7 @@
 * Packaging it into a WAR to deploy on a tomcat server
 
 * Refactoring the code to minimize code changes introduced by adding new events/nodes/edges.
+.. Graphs need to be setup automatically
 .. Get the front end to add new nodes
 
 * Add drill down into the software
