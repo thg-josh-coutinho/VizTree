@@ -184,7 +184,7 @@ public class AppTest
     private void initApp() {
 
         graph = new FlowGraph();
-        //graph.addGraphListener(new FlowGraphListener());
+        graph.addGraphListener(new FlowGraphListener());
         FlowGraphNode va = new FlowGraphNode("a");
         FlowGraphNode v1 = new FlowGraphNode("1");
         FlowGraphNode v2 = new FlowGraphNode("2");
@@ -400,7 +400,7 @@ public class AppTest
         Tuple<Stream<List<FlowGraphEdgeChangeEvent>>, FlowGraph> pair
                 = new Tuple<>(new MockStream(updateQueue).stream(), graph);
 
-        //app = new App(new MockStream(updateQueue).stream(), graph, 10000);
+        app = new App(new MockStream(updateQueue).stream(), graph, 10000);
 
     }
 

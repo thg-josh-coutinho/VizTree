@@ -110,7 +110,7 @@ public class FlowGraphEventStreamTest extends TestCase {
 
     public void test_send_message() throws JMSException {
 
-        /*session = initActiveMQSession();
+        session = initActiveMQSession();
         Destination destination = session.createQueue(QUEUE_NAME);
         MessageProducer producer = session.createProducer(destination);
 
@@ -128,7 +128,7 @@ public class FlowGraphEventStreamTest extends TestCase {
         eventStream.stream().forEach((es) -> isReservationRequestTransition(es));
 
         producer.send(session.createTextMessage(NEW_INVOICE_REQUEST));
-        eventStream.stream().forEach((es) -> isNewInvoiceRequestTransition(es));*/
+        eventStream.stream().forEach((es) -> isNewInvoiceRequestTransition(es));
 
     }
 
@@ -156,7 +156,7 @@ public class FlowGraphEventStreamTest extends TestCase {
     private Session initActiveMQSession() {
         try {
 
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(LOCAL_BROKER_ADDRESS);
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(STABLE_BROKER_ADDRESS);
             Connection connection = connectionFactory.createQueueConnection("admin", "admin");
             connection.start();
 

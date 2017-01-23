@@ -23,7 +23,9 @@ public class MockStream {
 
     private List<FlowGraphEdgeChangeEvent> nextUpdate() {
         List<FlowGraphEdgeChangeEvent> es = new LinkedList<>();
-        es.add(messages.get((counter++) % messages.size()));
+        FlowGraphEdgeChangeEvent e = messages.get((counter++) % messages.size());
+        e.setNewWeight(Math.random()*30);
+        es.add(e);
         return es;
 
     }
